@@ -38,8 +38,22 @@ else
     </table>
 }
 
+@if (employees != null)
+{
+    <input placeholder="First Name" @bind="firstName" />
+    <br />
+    <input placeholder="Last Name" @bind="lastName" />
+    <br />
+    <input placeholder="Level" @bind="level" />
+    <br />
+    <button @onclick="@Insert" class="btn btn-warning">Insert</button>
+}
 @functions{
     List<Employee> employees;
+    string employeeId;
+    string firstName;
+    string lastName;
+    string level;
 
     protected override async Task OnInitializedAsync()
     {
@@ -50,5 +64,28 @@ else
     {
         employees = await employeeService.GetEmployeesAsync();
 
+    }
+
+    protected async Task Insert()
+    {
+        Employee e = new Employee()
+        {
+            EmployeeId = Guid.NewGuid().ToString(),
+            FirstName = firstName,
+            LastName = lastName,
+            Level = level
+        };
+
+        await employeeService.InsertEmployeeAsync(e);
+        ClearFields();
+        await load();
+    }
+
+    protected void ClearFields()
+    {
+        employeeId = string.Empty;
+        firstName = string.Empty;
+        lastName = string.Empty;
+        level = string.Empty;
     }
 }
