@@ -14,7 +14,9 @@
     <p><em>Loading...</em></p>
 }
 else
+
 {
+    <button @onclick="@Add" class=" btn btn-success">Add</button>
     <table class="table table-hover">
         <thead>
             <tr>
@@ -27,7 +29,7 @@ else
         <tbody>
             @foreach (var item in employees)
             {
-                <tr>
+                <tr @onclick="@(() => Show(item.EmployeeId))">
                     <td>@item.EmployeeId</td>
                     <td>@item.FirstName</td>
                     <td>@item.LastName</td>
@@ -38,7 +40,7 @@ else
     </table>
 }
 
-@if (employees != null)
+@if (employees != null && mode == MODE.Add) //Insert  Form
 {
     <input placeholder="First Name" @bind="firstName" />
     <br />
@@ -48,12 +50,30 @@ else
     <br />
     <button @onclick="@Insert" class="btn btn-warning">Insert</button>
 }
+
+@if (employees != null && mode == MODE.EditDelete) //Update and Delete Form
+{
+    <input type="hidden" @bind="@employeeId" />
+    <br />
+    <input placeholder="First Name" @bind="@firstName" />
+    <br />
+    <input placeholder="Last Name" @bind="@lastName" />
+    <br />
+    <input placeholder="Level" @bind="@level" />
+    <br />
+    <button @onclick="@Update" class="btn btn-primary">Update</button>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    <button @onclick="@Delete" class="btn btn-danger">Delete</button>
+}
 @functions{
     List<Employee> employees;
     string employeeId;
     string firstName;
     string lastName;
     string level;
+    private enum MODE { None, Add, EditDelete };
+    MODE mode = MODE.None;
+    Employee employee;
 
     protected override async Task OnInitializedAsync()
     {
@@ -79,6 +99,7 @@ else
         await employeeService.InsertEmployeeAsync(e);
         ClearFields();
         await load();
+        mode = MODE.None;   //hide the insert menu
     }
 
     protected void ClearFields()
@@ -87,5 +108,46 @@ else
         firstName = string.Empty;
         lastName = string.Empty;
         level = string.Empty;
+    }
+
+    protected void Add()
+    {
+        ClearFields();
+        mode = MODE.Add;
+    }
+
+    protected async Task Update()
+    {
+        Employee e = new Employee()
+        {
+            EmployeeId = employeeId,
+            FirstName = firstName,
+            LastName = lastName,
+            Level = level
+        };
+
+        await employeeService.UpdateEmployeeAsync(employeeId, e);
+        ClearFields();
+        await load();
+        mode = MODE.None;
+
+    }
+
+    protected async Task Delete()
+    {
+        await employeeService.DeleteEmployeeAsync(employeeId);
+        ClearFields();
+        await load();
+        mode = MODE.None;
+    }
+
+    protected async Task Show(string id)
+    {
+        employee = await employeeService.GetEmployeeByIdAsync(id);
+        employeeId = employee.EmployeeId;
+        firstName = employee.FirstName;
+        lastName = employee.LastName;
+        level = employee.Level;
+        mode = MODE.EditDelete;
     }
 }
