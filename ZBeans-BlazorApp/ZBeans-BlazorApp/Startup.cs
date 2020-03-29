@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ZBeans_BlazorApp.Areas.Identity;
 using ZBeans_BlazorApp.Data;
+using ZBeans_BlazorApp.Models;
 
 namespace ZBeans_BlazorApp
 {
@@ -31,6 +32,7 @@ namespace ZBeans_BlazorApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<StoreDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
