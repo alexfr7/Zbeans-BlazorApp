@@ -2,8 +2,11 @@
 
 @using ZBeans_BlazorApp.Data
 @using ZBeans_BlazorApp.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
 
 @inject EmployeeService employeeService
+@attribute [Authorize(Roles = "ADMIN")]
 
 <h1>Employee Database</h1>
 
