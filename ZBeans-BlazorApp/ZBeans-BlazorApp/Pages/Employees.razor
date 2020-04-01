@@ -6,7 +6,7 @@
 @using Microsoft.AspNetCore.Identity
 
 @inject EmployeeService employeeService
-@attribute [Authorize(Roles = "ADMIN")]
+@attribute [Authorize(Roles = "ADMIN, MANAGER")]
 
 <h1>Employee Database</h1>
 

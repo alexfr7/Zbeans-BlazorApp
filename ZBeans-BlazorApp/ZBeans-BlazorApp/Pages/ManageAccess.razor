@@ -9,7 +9,9 @@
 
 <h3>Manage Access</h3>
 
-<AuthorizeView>
+
+@*  If you want to just add some other error text
+    <AuthorizeView>
     <Authorized>
         @if (@context.User.IsInRole(ADMIN))
         {
@@ -24,6 +26,9 @@
         <p>You are not logged in. Please login to see this page.</p>
     </NotAuthorized>
 </AuthorizeView>
+*@
+
+@attribute [Authorize(Roles = "ADMIN")]
 
 @code {
     [CascadingParameter]
@@ -39,7 +44,7 @@
         var roleResult = await _RoleManager.FindByNameAsync(ADMIN);
         //Make ADMIN a role
 
-        if(roleResult == null)
+        if (roleResult == null)
         {
             await _RoleManager.CreateAsync(new IdentityRole(ADMIN));
         }
@@ -50,7 +55,7 @@
         {
             //make sure he is admin
             var userResult = await _UserManager.IsInRoleAsync(user, ADMIN);
-            if(!userResult)
+            if (!userResult)
             {
                 //make him admin
                 await _UserManager.AddToRoleAsync(user, ADMIN);
