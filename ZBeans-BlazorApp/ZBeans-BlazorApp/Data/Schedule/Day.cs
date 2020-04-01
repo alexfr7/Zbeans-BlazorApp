@@ -9,6 +9,7 @@ namespace ZBeans_BlazorApp.Data.Schedule
 {
     public class Day
     {
+
         public List<List<Employee>> TimeSlots = new List<List<Employee>>(48);
 
         public Day()
