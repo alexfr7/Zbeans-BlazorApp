@@ -10,7 +10,6 @@
 <h3>Manage Access</h3>
 
 
-@*  If you want to just add some other error text
     <AuthorizeView>
     <Authorized>
         @if (@context.User.IsInRole(ADMIN))
@@ -26,11 +25,12 @@
         <p>You are not logged in. Please login to see this page.</p>
     </NotAuthorized>
 </AuthorizeView>
-*@
 
-@attribute [Authorize(Roles = "ADMIN")]
+
 
 @code {
+   
+
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     string ADMIN = "Administrator";

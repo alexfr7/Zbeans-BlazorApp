@@ -1,0 +1,156 @@
+﻿@page "/adminOnly"
+<h3>Managers</h3>
+
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Identity;
+
+@inject UserManager<IdentityUser> _UserManager
+@inject RoleManager<IdentityRole> _RoleManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+<AuthorizeView>
+    <Authorized>
+        @if (@context.User.IsInRole(ADMIN))
+        {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>User Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var user in ColUsers)
+                {
+                    <tr>
+                        <td>@user.Id.Substring(0, 5) ...</td>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
+                        <td>
+                            <button class="btn btn-primary"
+                                    @onclick="(() => EditUser(user))">
+                                Edit
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+        }
+        else
+        {
+            <p>You are not signed in as an administrator.</p>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <p>You are not logged in. Please login to see this page.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
+@code {
+    IdentityUser objUser = new IdentityUser();
+    string CurrentUserRole { get; set; } = "Users";
+    List<IdentityUser> ColUsers = new List<IdentityUser>();
+    //the possible roles a user can have
+    List<string> Roles = new List<string>() { "Managers", "Administrators" };
+
+
+    string strError = "";
+    //The pop up to add people starts off
+    bool ShowPopup = false;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    string ADMIN = "Administrator";
+    System.Security.Claims.ClaimsPrincipal CurrentUser;
+
+
+}
+
+
+
+
+@functions{
+    void AddNewUser()
+    {
+
+    }
+
+    async Task SaveUser()
+    {
+
+    }
+
+    async Task EditUser(IdentityUser _IdentityUser)
+    {
+
+    }
+
+    async Task DeleteUser()
+    {
+
+    }
+
+    void ClosePopup()
+    {
+        //close the edit/add/delete user popup
+        ShowPopup = false;
+    }
+
+    void GetUsers()
+    {
+        strError = "";
+        ColUsers = new List<IdentityUser>();
+        var user = _UserManager.Users.Select(x => new IdentityUser
+        {
+            Id = x.Id,
+            UserName = x.UserName,
+            Email = x.Email,
+            PasswordHash = "******"
+        });
+
+        foreach (var i in user)
+        {
+            ColUsers.Add(i);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //make sure there is an administration role
+        //"ADMIN"
+
+        var roleResult = await _RoleManager.FindByNameAsync(ADMIN);
+        //Make ADMIN a role
+
+        if (roleResult == null)
+        {
+            await _RoleManager.CreateAsync(new IdentityRole(ADMIN));
+        }
+
+        // we would put carters email here
+        var user = await _UserManager.FindByNameAsync("AMARLEYF@GMAIL.COM");
+        if (user != null)
+        {
+            //make sure he is admin
+            var userResult = await _UserManager.IsInRoleAsync(user, ADMIN);
+            if (!userResult)
+            {
+                //make him admin
+                await _UserManager.AddToRoleAsync(user, ADMIN);
+            }
+        }
+
+        //get current user
+
+        CurrentUser = (await authenticationStateTask).User;
+
+        GetUsers();
+    }
+}
