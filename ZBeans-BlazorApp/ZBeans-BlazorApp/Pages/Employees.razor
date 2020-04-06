@@ -17,64 +17,98 @@
 <AuthorizeView>
     <Authorized>
 
-            @if (employees == null)
-            {
-                <p><em>Loading...</em></p>
-            }
-            else
+        @if (employees == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
 
-            {
-                <button @onclick="@Add" class=" btn btn-success">Add</button>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Level</th>
+        {
+            //The button to add a new employee
+            <button @onclick="@Add" class=" btn btn-success">Add</button>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Level</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <!--Show every employeee that is stored in the StoreDbContext-->
+                    @foreach (var item in employees)
+                    {
+                        <tr @onclick="@(() => Show(item.EmployeeId))">
+                            <td>@item.EmployeeId</td>
+                            <td>@item.FirstName</td>
+                            <td>@item.LastName</td>
+                            <td>@item.Level</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in employees)
-                        {
-                            <tr @onclick="@(() => Show(item.EmployeeId))">
-                                <td>@item.EmployeeId</td>
-                                <td>@item.FirstName</td>
-                                <td>@item.LastName</td>
-                                <td>@item.Level</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
+                    }
+                </tbody>
+            </table>
+        }
 
-            @if (employees != null && mode == MODE.Add) //Insert  Form
-            {
-                <input placeholder="First Name" @bind="firstName" />
-                <br />
-                <input placeholder="Last Name" @bind="lastName" />
-                <br />
-                <input placeholder="Level" @bind="level" />
-                <br />
-                <button @onclick="@Insert" class="btn btn-warning">Insert</button>
-            }
+        <!--Popups to display the information overtop of the employee list-->
 
-            @if (employees != null && mode == MODE.EditDelete) //Update and Delete Form
-            {
-                <input type="hidden" @bind="@employeeId" />
-                <br />
-                <input placeholder="First Name" @bind="@firstName" />
-                <br />
-                <input placeholder="Last Name" @bind="@lastName" />
-                <br />
-                <input placeholder="Level" @bind="@level" />
-                <br />
-                <button @onclick="@Update" class="btn btn-primary">Update</button>
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <button @onclick="@Delete" class="btn btn-danger">Delete</button>
+        @if (employees != null && mode == MODE.Add && ShowPopup) //Insert  Form
+        {
+            <div class=" modal" tabindex="-1" style="display:block" role="dialog">
+                <div class="modal-dialog">
+                    <div class=" modal-content">
+                        <div class=" modal-header">
+                            <h3 class="modal-title">Edit or Delete User</h3>
+                            <button type="button" class=" close"
+                                    @onclick="@Cancel">
+                                <span aria-hidden="true">X</span>
+                            </button>
+                        </div>
+                        <input placeholder="First Name" @bind="firstName" />
+                        <br />
+                        <input placeholder="Last Name" @bind="lastName" />
+                        <br />
+                        <input placeholder="Level" @bind="level" />
+                        <br />
+                        <button @onclick="@Insert" class="btn btn-warning">Insert</button>
+                        <button @onclick="@Cancel" class="btn btn-dark">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        }
 
-
-            }
+        @if (employees != null && mode == MODE.EditDelete && ShowPopup) //Update and Delete Form
+        {
+            <div class=" modal" tabindex="-1" style="display:block" role="dialog">
+                <div class="modal-dialog">
+                    <div class=" modal-content">
+                        <div class=" modal-header">
+                            <h3 class="modal-title">Edit or Delete User</h3>
+                            <button type="button" class=" close"
+                                    @onclick="@Cancel">
+                                <span aria-hidden="true">X</span>
+                            </button>
+                        </div>
+                   
+                            <input type="hidden" @bind="@employeeId" />
+                            <br />
+                            <input placeholder="First Name" @bind="@firstName" />
+                            <br />
+                            <input placeholder="Last Name" @bind="@lastName" />
+                            <br />
+                            <input placeholder="Level" @bind="@level" />
+                            <br />
+                            <button @onclick="@Update" class="btn btn-primary">Update</button>
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <button @onclick="@Delete" class="btn btn-danger">Delete</button>
+                            <br />
+                            <button @onclick="@Cancel" class="btn btn-dark">Cancel</button>
+                           
+                        </div>
+                    </div>
+            </div>
+        }
     </Authorized>
 </AuthorizeView>
 @functions{
@@ -86,6 +120,7 @@
     private enum MODE { None, Add, EditDelete };
     MODE mode = MODE.None;
     Employee employee;
+    bool ShowPopup = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -113,6 +148,7 @@
         ClearFields();
         await load();
         mode = MODE.None;   //hide the insert menu
+        ShowPopup = false;
     }
 
     protected void ClearFields()
@@ -127,6 +163,7 @@
     {
         ClearFields();
         mode = MODE.Add;
+        ShowPopup = true;
     }
 
     protected async Task Update()
@@ -143,6 +180,7 @@
         ClearFields();
         await load();
         mode = MODE.None;
+        ShowPopup = false;
 
     }
 
@@ -152,6 +190,7 @@
         ClearFields();
         await load();
         mode = MODE.None;
+        ShowPopup = false;
     }
 
     protected async Task Show(string id)
@@ -162,5 +201,13 @@
         lastName = employee.LastName;
         level = employee.Level;
         mode = MODE.EditDelete;
+        ShowPopup = true;
+    }
+
+    protected async Task Cancel()
+    {
+        ClearFields();
+        mode = MODE.None;
+        ShowPopup = false;
     }
 }
