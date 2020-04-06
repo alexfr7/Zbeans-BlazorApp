@@ -4,70 +4,79 @@
 @using ZBeans_BlazorApp.Models
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using System.Web
 
 @inject EmployeeService employeeService
-@attribute [Authorize(Roles = "ADMIN, MANAGER")]
-
+@inject UserManager<IdentityUser> _UserManager
+@inject RoleManager<IdentityRole> _RoleManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 <h1>Employee Database</h1>
 
 <p>This shows a list of all current employees. </p>
 
-@if (employees == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
+<AuthorizeView>
+    <Authorized>
 
-{
-    <button @onclick="@Add" class=" btn btn-success">Add</button>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Level</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in employees)
+            @if (employees == null)
             {
-                <tr @onclick="@(() => Show(item.EmployeeId))">
-                    <td>@item.EmployeeId</td>
-                    <td>@item.FirstName</td>
-                    <td>@item.LastName</td>
-                    <td>@item.Level</td>
-                </tr>
+                <p><em>Loading...</em></p>
             }
-        </tbody>
-    </table>
-}
+            else
 
-@if (employees != null && mode == MODE.Add) //Insert  Form
-{
-    <input placeholder="First Name" @bind="firstName" />
-    <br />
-    <input placeholder="Last Name" @bind="lastName" />
-    <br />
-    <input placeholder="Level" @bind="level" />
-    <br />
-    <button @onclick="@Insert" class="btn btn-warning">Insert</button>
-}
+            {
+                <button @onclick="@Add" class=" btn btn-success">Add</button>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in employees)
+                        {
+                            <tr @onclick="@(() => Show(item.EmployeeId))">
+                                <td>@item.EmployeeId</td>
+                                <td>@item.FirstName</td>
+                                <td>@item.LastName</td>
+                                <td>@item.Level</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
 
-@if (employees != null && mode == MODE.EditDelete) //Update and Delete Form
-{
-    <input type="hidden" @bind="@employeeId" />
-    <br />
-    <input placeholder="First Name" @bind="@firstName" />
-    <br />
-    <input placeholder="Last Name" @bind="@lastName" />
-    <br />
-    <input placeholder="Level" @bind="@level" />
-    <br />
-    <button @onclick="@Update" class="btn btn-primary">Update</button>
-    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-    <button @onclick="@Delete" class="btn btn-danger">Delete</button>
-}
+            @if (employees != null && mode == MODE.Add) //Insert  Form
+            {
+                <input placeholder="First Name" @bind="firstName" />
+                <br />
+                <input placeholder="Last Name" @bind="lastName" />
+                <br />
+                <input placeholder="Level" @bind="level" />
+                <br />
+                <button @onclick="@Insert" class="btn btn-warning">Insert</button>
+            }
+
+            @if (employees != null && mode == MODE.EditDelete) //Update and Delete Form
+            {
+                <input type="hidden" @bind="@employeeId" />
+                <br />
+                <input placeholder="First Name" @bind="@firstName" />
+                <br />
+                <input placeholder="Last Name" @bind="@lastName" />
+                <br />
+                <input placeholder="Level" @bind="@level" />
+                <br />
+                <button @onclick="@Update" class="btn btn-primary">Update</button>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <button @onclick="@Delete" class="btn btn-danger">Delete</button>
+
+
+            }
+    </Authorized>
+</AuthorizeView>
 @functions{
     List<Employee> employees;
     string employeeId;
@@ -86,6 +95,7 @@ else
     protected async Task load()
     {
         employees = await employeeService.GetEmployeesAsync();
+
 
     }
 
