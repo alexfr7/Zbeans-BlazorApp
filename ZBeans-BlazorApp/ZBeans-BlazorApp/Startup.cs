@@ -16,7 +16,6 @@ using Microsoft.Extensions.Hosting;
 using ZBeans_BlazorApp.Areas.Identity;
 using ZBeans_BlazorApp.Data;
 using ZBeans_BlazorApp.Models;
-using ZBeans_BlazorApp.Authorization;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ZBeans_BlazorApp
