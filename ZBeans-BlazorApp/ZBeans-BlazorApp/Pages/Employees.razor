@@ -14,7 +14,11 @@
 
 <p>This shows a list of all current employees. </p>
 
-<AuthorizeView>
+<!--This page is only able to be edited and seen if you are a manager or an admin-->
+<AuthorizeView Roles="User, Admin">
+    <NotAuthorized>
+        <p>You do not have permission to view this page. Please contact the Administrator for assistance.</p>
+    </NotAuthorized>
     <Authorized>
 
         @if (employees == null)
@@ -41,7 +45,7 @@
                     @foreach (var item in employees)
                     {
                         <tr @onclick="@(() => Show(item.EmployeeId))">
-                            <td>@item.EmployeeId</td>
+                            <td>@item.EmployeeId.Substring(0, 10)</td>
                             <td>@item.FirstName</td>
                             <td>@item.LastName</td>
                             <td>@item.Level</td>
@@ -90,23 +94,23 @@
                                 <span aria-hidden="true">X</span>
                             </button>
                         </div>
-                   
-                            <input type="hidden" @bind="@employeeId" />
-                            <br />
-                            <input placeholder="First Name" @bind="@firstName" />
-                            <br />
-                            <input placeholder="Last Name" @bind="@lastName" />
-                            <br />
-                            <input placeholder="Level" @bind="@level" />
-                            <br />
-                            <button @onclick="@Update" class="btn btn-primary">Update</button>
-                            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                            <button @onclick="@Delete" class="btn btn-danger">Delete</button>
-                            <br />
-                            <button @onclick="@Cancel" class="btn btn-dark">Cancel</button>
-                           
-                        </div>
+
+                        <input type="hidden" @bind="@employeeId" />
+                        <br />
+                        <input placeholder="First Name" @bind="@firstName" />
+                        <br />
+                        <input placeholder="Last Name" @bind="@lastName" />
+                        <br />
+                        <input placeholder="Level" @bind="@level" />
+                        <br />
+                        <button @onclick="@Update" class="btn btn-primary">Update</button>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <button @onclick="@Delete" class="btn btn-danger">Delete</button>
+                        <br />
+                        <button @onclick="@Cancel" class="btn btn-dark">Cancel</button>
+
                     </div>
+                </div>
             </div>
         }
     </Authorized>
