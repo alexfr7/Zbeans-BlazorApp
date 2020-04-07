@@ -10,9 +10,9 @@
 @inject UserManager<IdentityUser> _UserManager
 @inject RoleManager<IdentityRole> _RoleManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
-<h1>Employee Database</h1>
+<h3>Employee Database</h3>
 
-<p>This shows a list of all current employees. </p>
+
 
 <!--This page is only able to be edited and seen if you are a manager or an admin-->
 <AuthorizeView Roles="User, Admin">
@@ -20,6 +20,7 @@
         <p>You do not have permission to view this page. Please contact the Administrator for assistance.</p>
     </NotAuthorized>
     <Authorized>
+        <p>This shows a list of all current employees. </p>
 
         @if (employees == null)
         {
