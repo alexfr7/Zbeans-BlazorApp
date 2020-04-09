@@ -9,8 +9,10 @@ namespace ZBeans_BlazorApp.Models
 {
     public class ScheduleService
     {
+
         StoreDbContext scheduleContext ;
-        Schedule daySchedule = new Schedule();
+
+
         public ScheduleService(StoreDbContext _context)
         {
             scheduleContext = _context;
@@ -21,16 +23,23 @@ namespace ZBeans_BlazorApp.Models
         {
             // List of 7 days to return
             List<Day> Week = new List<Day>(7);
-
+            
             // Get the first day of the requested week, at Monday.
             DateTime dayTracker = WeekOfYear.StartOfWeek(DayOfWeek.Monday);
-            
-
-
-
 
             
-            //daySchedule.WeekSchedule[(int)dayTracker.DayOfWeek].TimeSlots = 
+            Week.Add( scheduleContext.Monday.Find(dayTracker));
+            Week.Add(scheduleContext.Tuesday.Find(dayTracker.AddDays(1)));
+            Week.Add(scheduleContext.Wednesday.Find(dayTracker.AddDays(2)));
+            Week.Add(scheduleContext.Thursday.Find(dayTracker.AddDays(3)));
+            Week.Add(scheduleContext.Friday.Find(dayTracker.AddDays(4)));
+            Week.Add(scheduleContext.Saturday.Find(dayTracker.AddDays(5)));
+            Week.Add(scheduleContext.Sunday.Find(dayTracker.AddDays(6)));
+
+            return Week;
+
         }
+
+       
     }
 }

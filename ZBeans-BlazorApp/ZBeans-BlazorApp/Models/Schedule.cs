@@ -9,11 +9,12 @@ namespace ZBeans_BlazorApp.Models
 {
     public class Schedule
     {
-        public List<Day> WeekSchedule = new List<Day>(7);
+        public List<Day> WeekSchedule;
         
         public Schedule()
         {
-            for(int i = 0; i < WeekSchedule.Capacity; i++)
+            WeekSchedule = new List<Day>();
+            for(int i = 0; i < 7; i++)
             {
                 WeekSchedule.Add(new Day());
             }

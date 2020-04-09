@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZBeans_BlazorApp.Models;
 
 namespace ZBeans_BlazorApp.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    partial class StoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200406164538_NewMigration")]
+    partial class NewMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,14 +58,14 @@ namespace ZBeans_BlazorApp.Migrations
                     b.HasData(
                         new
                         {
-                            EmployeeId = "3f303ad2-8013-4835-af28-484507ebd23f",
+                            EmployeeId = "d48cfe37-05b3-44f3-92f5-a7691a38c5f7",
                             FirstName = "Alex",
                             LastName = "Frink",
                             Level = "Experienced"
                         },
                         new
                         {
-                            EmployeeId = "d2e84526-a739-4c71-9d02-0e07120ee7b8",
+                            EmployeeId = "5f4a50a2-2ffe-4ab1-8267-3da3e44a4a36",
                             FirstName = "Nick",
                             LastName = "Rogie",
                             Level = "Entry"

@@ -33,6 +33,7 @@ namespace ZBeans_BlazorApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<EmployeeService>();
+            services.AddScoped<ScheduleService>();
             services.AddDbContext<StoreDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.ComponentModel.DataAnnotations;
 using ZBeans_BlazorApp.Models;
 
 namespace ZBeans_BlazorApp.Data.Schedule
@@ -11,8 +11,10 @@ namespace ZBeans_BlazorApp.Data.Schedule
     {
         // For storage of each day, we have to get creative
         // Store a delimited string with all of the employee info in it.
-        public DateTime date;
-        public string DailyScheduleList;
+        [Key]
+        public DateTime Date { get; set; }
+
+        public string DailyScheduleList { get; set; } = "";
 
         // Data handling will go through here.
         private List<List<Employee>> TimeSlots = new List<List<Employee>>(48);
@@ -21,7 +23,7 @@ namespace ZBeans_BlazorApp.Data.Schedule
         {
             for(int i = 0; i < TimeSlots.Capacity; i++)
             {
-                TimeSlots[i] = new List<Employee>();
+                TimeSlots.Add(new List<Employee>());
             }
         }
 
