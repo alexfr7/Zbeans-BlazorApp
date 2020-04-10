@@ -5,6 +5,8 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using System.Web
+@using Radzen
+@using Radzen.Blazor
 
 @inject EmployeeService employeeService
 @inject UserManager<IdentityUser> _UserManager
@@ -60,7 +62,7 @@
 
         @if (employees != null && mode == MODE.Add && ShowPopup) //Insert  Form
         {
-            <div class=" modal" tabindex="-1" style="display:block" role="dialog">
+            <div class=" modal" overflow="visible" tabindex="-1" style="display:block" role="dialog">
                 <div class="modal-dialog">
                     <div class=" modal-content">
                         <div class=" modal-header">
@@ -70,7 +72,7 @@
                                 <span aria-hidden="true">X</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" overflow-y: visible>
                             <input placeholder="First Name" @bind="firstName" />
                             <br />
                             <input placeholder="Last Name" @bind="lastName" />
@@ -78,15 +80,39 @@
                             <input placeholder="Level" @bind="level" />
                             <br />
                             <h5>Availability</h5>
+                            <RadzenAccordion Multiple="true">
+                                <Items>
+                                    <RadzenAccordionItem Text="Monday">
+                                        <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="values" Multiple="true" Data="@times" TextProperty="TIme" ValueProperty="timeWork"
+                                                      Style="margin-bottom: 20px; height:200px;" />
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Tuesday">
+                                        Tusday availability
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Wednesday">
+                                        availability
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Thursday">
+                                       availability
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Friday">
+                                       availability
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Saturday">
+                                        availability
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Sunday">
+                                        availability
+                                    </RadzenAccordionItem>
+                                </Items>
+                            </RadzenAccordion>
                             <h5>Preferred Day(s)</h5>
                             @foreach (string day in daysOfWeek)
                             {
                                 <input value="@day" type="checkbox" name="Checked" />@day
-                             }
-
-
+                            }
+                            <br />
                         </div>
-                        <br />
                         <button @onclick="@Insert" class="btn btn-warning">Insert</button>
                         <button @onclick="@Cancel" class="btn btn-dark">Cancel</button>
                     </div>
@@ -116,22 +142,8 @@
                             <input placeholder="Level" @bind="@level" />
                             <br />
                             <h5>Availability</h5>
-                            <div class=" accordion" id = "accordianMenu" aria-multiselectable="true">
-                                <div class="card">
-                                    <div class="card-header" id="Monday">
-                                        <h2 class="mb-0">
-                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseMonday" aria-expanded="true" aria-controls="collapseMonday">
-                                                Monday Times
-                                            </button>
-                                        </h2>
-                                    </div>
-                                    <div id="collapseMonday" class="collapse show" aria-labelledby="Monday" data-parent="accordianMenu">
-                                        <div class="card-body">
-                                            TIMES HERE
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
+                            <br />
                             <h5>Preferred Day(s)</h5>
                             @foreach (string day in daysOfWeek)
                             {
@@ -150,16 +162,18 @@
     </Authorized>
 </AuthorizeView>
 @functions{
-    List<Employee> employees;
-    string employeeId;
-    string firstName;
-    string lastName;
-    string level;
+            List<Employee> employees;
+            string employeeId;
+            string firstName;
+            string lastName;
+            string level;
     private enum MODE { None, Add, EditDelete };
-    MODE mode = MODE.None;
-    Employee employee;
-    bool ShowPopup = false;
+        MODE mode = MODE.None;
+        Employee employee;
+        bool ShowPopup = false;
+        IEnumerable<string> values = new string[] {""};
     List<string> daysOfWeek = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+    IEnumerable<string> times = new List<string> { "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00" };
 
     protected override async Task OnInitializedAsync()
     {
@@ -249,4 +263,5 @@
         mode = MODE.None;
         ShowPopup = false;
     }
+
 }
