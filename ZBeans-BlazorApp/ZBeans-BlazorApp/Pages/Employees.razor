@@ -64,17 +64,28 @@
                 <div class="modal-dialog">
                     <div class=" modal-content">
                         <div class=" modal-header">
-                            <h3 class="modal-title">Edit or Delete User</h3>
+                            <h3 class="modal-title">Add New Employee</h3>
                             <button type="button" class=" close"
                                     @onclick="@Cancel">
                                 <span aria-hidden="true">X</span>
                             </button>
                         </div>
-                        <input placeholder="First Name" @bind="firstName" />
-                        <br />
-                        <input placeholder="Last Name" @bind="lastName" />
-                        <br />
-                        <input placeholder="Level" @bind="level" />
+                        <div class="modal-body">
+                            <input placeholder="First Name" @bind="firstName" />
+                            <br />
+                            <input placeholder="Last Name" @bind="lastName" />
+                            <br />
+                            <input placeholder="Level" @bind="level" />
+                            <br />
+                            <h5>Availability</h5>
+                            <h5>Preferred Day(s)</h5>
+                            @foreach (string day in daysOfWeek)
+                            {
+                                <input value="@day" type="checkbox" name="Checked" />@day
+                             }
+
+
+                        </div>
                         <br />
                         <button @onclick="@Insert" class="btn btn-warning">Insert</button>
                         <button @onclick="@Cancel" class="btn btn-dark">Cancel</button>
@@ -89,25 +100,47 @@
                 <div class="modal-dialog">
                     <div class=" modal-content">
                         <div class=" modal-header">
-                            <h3 class="modal-title">Edit or Delete User</h3>
+                            <h3 class="modal-title">Edit or Delete Employee</h3>
                             <button type="button" class=" close"
                                     @onclick="@Cancel">
                                 <span aria-hidden="true">X</span>
                             </button>
                         </div>
-
-                        <input type="hidden" @bind="@employeeId" />
-                        <br />
-                        <input placeholder="First Name" @bind="@firstName" />
-                        <br />
-                        <input placeholder="Last Name" @bind="@lastName" />
-                        <br />
-                        <input placeholder="Level" @bind="@level" />
-                        <br />
+                        <div class="modal-body">
+                            <input type="hidden" @bind="@employeeId" />
+                            <br />
+                            <input placeholder="First Name" @bind="@firstName" />
+                            <br />
+                            <input placeholder="Last Name" @bind="@lastName" />
+                            <br />
+                            <input placeholder="Level" @bind="@level" />
+                            <br />
+                            <h5>Availability</h5>
+                            <div class=" accordion" id = "accordianMenu" aria-multiselectable="true">
+                                <div class="card">
+                                    <div class="card-header" id="Monday">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseMonday" aria-expanded="true" aria-controls="collapseMonday">
+                                                Monday Times
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseMonday" class="collapse show" aria-labelledby="Monday" data-parent="accordianMenu">
+                                        <div class="card-body">
+                                            TIMES HERE
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5>Preferred Day(s)</h5>
+                            @foreach (string day in daysOfWeek)
+                            {
+                                <input value="@day" type="checkbox" name="Checked" />@day
+                            }
+                        </div>
                         <button @onclick="@Update" class="btn btn-primary">Update</button>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
                         <button @onclick="@Delete" class="btn btn-danger">Delete</button>
-                        <br />
                         <button @onclick="@Cancel" class="btn btn-dark">Cancel</button>
 
                     </div>
@@ -126,6 +159,7 @@
     MODE mode = MODE.None;
     Employee employee;
     bool ShowPopup = false;
+    List<string> daysOfWeek = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
     protected override async Task OnInitializedAsync()
     {
