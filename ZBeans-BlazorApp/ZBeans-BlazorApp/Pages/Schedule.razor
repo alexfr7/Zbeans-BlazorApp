@@ -10,7 +10,7 @@
 
 <h3>Schedule</h3>
 <h4>Week of @currWeek.ToString(@"MM/dd/yy") </h4>
-<button @onclick="@TestDebug" class="btn btn-warning">TestButton</button>
+<button @onclick="@TestDebug" class="btn btn-warning">@TestResult()</button>
 <table class="table table-sm">
     <thead>
         <tr>
@@ -36,7 +36,7 @@
         @for (int i = 0; i < 48; i++)
         {
             <tr>
-                <td> @TimeSpan.FromMinutes(i * 30).ToString(@"hh\:mm")</td>
+                <td> @TimeSpan.FromMinutes(i * 30).ToString(@"hh\:mm") </td>
                 <td><button class="btn btn-outline-dark">@GetScheduleValue(0)</button> </td>
                 <td><button class="btn btn-outline-dark">@GetScheduleValue(1)</button></td>
                 <td><button class="btn btn-outline-dark">@GetScheduleValue(2)</button></td>
@@ -55,7 +55,7 @@
     TimeSpan timeTrack = new TimeSpan(0, 0, 0);
     DateTime currWeek = DateTime.Now.StartOfWeek(DayOfWeek.Monday);
 
-    public List<Day> schedule ;
+    public List<Day> schedule;
     List<Employee> employees;
 
     protected override async Task OnInitializedAsync()
@@ -87,6 +87,17 @@
 
     protected void TestDebug()
     {
-        
+        scheduleService.InsertDayAsync(new Day
+        { Date = DateTime.Now, DailyScheduleList = "TestList" }, DayOfWeek.Thursday);
+
+    }
+
+    protected async Task<string> TestResult()
+    {
+        Day wednesdayTest = (await scheduleService.GetScheduleAsync(DateTime.Now))[3];
+        if (wednesdayTest == null)
+            return "TestList";
+        else
+            return wednesdayTest.DailyScheduleList;
     }
 }

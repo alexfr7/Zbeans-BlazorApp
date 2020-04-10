@@ -42,6 +42,13 @@ namespace ZBeans_BlazorApp.Models
 
                }
                 );
+           
+            builder.Entity<Day>().HasData(
+                new
+                {
+                    Date = DateTime.Now,
+                    DailyScheduleList = ""
+                }) ;
         }
     }
 }

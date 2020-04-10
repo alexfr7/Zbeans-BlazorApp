@@ -12,6 +12,7 @@ namespace ZBeans_BlazorApp.Models
 
         StoreDbContext scheduleContext ;
 
+        
 
         public ScheduleService(StoreDbContext _context)
         {
@@ -28,7 +29,7 @@ namespace ZBeans_BlazorApp.Models
             DateTime dayTracker = WeekOfYear.StartOfWeek(DayOfWeek.Monday);
 
             
-            Week.Add( scheduleContext.Monday.Find(dayTracker));
+            Week.Add(scheduleContext.Monday.Find(dayTracker));
             Week.Add(scheduleContext.Tuesday.Find(dayTracker.AddDays(1)));
             Week.Add(scheduleContext.Wednesday.Find(dayTracker.AddDays(2)));
             Week.Add(scheduleContext.Thursday.Find(dayTracker.AddDays(3)));
@@ -39,6 +40,46 @@ namespace ZBeans_BlazorApp.Models
             return Week;
 
         }
+
+        public async void InsertDayAsync(Day day, DayOfWeek dayOfWeek)
+        {
+            //Correct for starting the week on Monday
+            int dayIndex;
+            if ((int)dayOfWeek == 0) dayIndex = 6;
+            else dayIndex = (int)dayOfWeek - 1;
+
+            switch(dayIndex)
+            {
+                case 0:
+                    scheduleContext.Monday.Add(day);
+                    break;
+                case 1:
+                    scheduleContext.Tuesday.Add(day);
+                    break;
+                case 2:
+                    scheduleContext.Wednesday.Add(day);
+                    break;
+                case 3:
+                    scheduleContext.Thursday.Add(day);
+                    break;
+                case 4:
+                    scheduleContext.Friday.Add(day);
+                    break;
+                case 5:
+                    scheduleContext.Saturday.Add(day);
+                    break;
+                case 6:
+                    scheduleContext.Sunday.Add(day);
+                    break;
+                default:
+                    break;
+            }
+
+            await scheduleContext.SaveChangesAsync();
+            
+        }
+
+
 
        
     }
