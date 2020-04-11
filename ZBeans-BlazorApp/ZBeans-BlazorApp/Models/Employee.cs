@@ -18,12 +18,12 @@ namespace ZBeans_BlazorApp.Models
         public string PreferredDays { get; set; }
 
         public string MondayAvailability { get; set; }
-       // public string TuesdayAvailability { get; set; }
-       // public string WednesdayAvailability { get; set; }
-        //public string ThursdayAvailability { get; set; }
-        //public string FridayAvailability { get; set; }
-        //public string SaturdayAvailability { get; set; }
-        //public string SundayAvailability { get; set; }
+        public string TuesdayAvailability { get; set; }
+        public string WednesdayAvailability { get; set; }
+        public string ThursdayAvailability { get; set; }
+        public string FridayAvailability { get; set; }
+        public string SaturdayAvailability { get; set; }
+        public string SundayAvailability { get; set; }
 
     }
 }
