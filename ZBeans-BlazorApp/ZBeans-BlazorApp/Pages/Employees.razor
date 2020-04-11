@@ -87,7 +87,7 @@
                                 <Items>
                                     <RadzenAccordionItem Text="Monday">
                                         <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="values" Multiple="true" Data="@times" TextProperty="TIme" ValueProperty="timeWork"
-                                                      Style="margin-bottom: 20px; height:200px;" />
+                                                       Change="@Change" Style="margin-bottom: 20px; height:200px;" />
                                     </RadzenAccordionItem>
                                     <RadzenAccordionItem Text="Tuesday">
                                         Tusday availability
@@ -96,10 +96,10 @@
                                         availability
                                     </RadzenAccordionItem>
                                     <RadzenAccordionItem Text="Thursday">
-                                       availability
+                                        availability
                                     </RadzenAccordionItem>
                                     <RadzenAccordionItem Text="Friday">
-                                       availability
+                                        availability
                                     </RadzenAccordionItem>
                                     <RadzenAccordionItem Text="Saturday">
                                         availability
@@ -110,15 +110,21 @@
                                 </Items>
                             </RadzenAccordion>
                             <h5>Preferred Day(s)</h5>
-                            @foreach (string day in daysOfWeek)
-                            {
-                                <input value="@day" type="checkbox" name="Checked" @bind="pref" />@day
-                                if (pref)
-                                {
-                                @AddDay(day)
-                                }
-
-                            }
+                            <RadzenCheckBox @bind-Value="@checkboxMon" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Monday" Component="checkboxMon" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <RadzenCheckBox @bind-Value="@checkboxTue" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Tuesday" Component="checkboxTue" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <RadzenCheckBox @bind-Value="@checkboxWed" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Wednesday" Component="checkboxWed" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <RadzenCheckBox @bind-Value="@checkboxThu" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Thursday" Component="checkboxThu" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <br/>
+                            <RadzenCheckBox @bind-Value="@checkboxFri" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Friday" Component="checkboxFri" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <RadzenCheckBox @bind-Value="@checkboxSat" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Saturday" Component="checkboxSat" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <RadzenCheckBox @bind-Value="@checkboxSun" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Sunday" Component="checkboxSun" Style="margin-left: 5px;margin-bottom: 20px" />
                             <br />
                         </div>
                         <button @onclick="@Insert" class="btn btn-warning">Insert</button>
@@ -153,10 +159,22 @@
 
                             <br />
                             <h5>Preferred Day(s)</h5>
-                            @foreach (string day in daysOfWeek)
-                            {
-                                <input value="@day" type="checkbox" name="Checked" />@day
-                            }
+                            <RadzenCheckBox @bind-Value="@checkboxMon" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Monday" Component="checkboxMon" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <RadzenCheckBox @bind-Value="@checkboxTue" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Tuesday" Component="checkboxTue" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <RadzenCheckBox @bind-Value="@checkboxWed" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Wednesday" Component="checkboxWed" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <RadzenCheckBox @bind-Value="@checkboxThu" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Thursday" Component="checkboxThu" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <br />
+                            <RadzenCheckBox @bind-Value="@checkboxFri" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Friday" Component="checkboxFri" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <RadzenCheckBox @bind-Value="@checkboxSat" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Saturday" Component="checkboxSat" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <RadzenCheckBox @bind-Value="@checkboxSun" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                            <RadzenLabel Text="Sunday" Component="checkboxSun" Style="margin-left: 5px;margin-bottom: 20px" />
+                            <br />
                         </div>
                         <button @onclick="@Update" class="btn btn-primary">Update</button>
 
@@ -182,8 +200,9 @@
     IEnumerable<string> values = new string[] {""};
     List<string> daysOfWeek = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
     IEnumerable<string> times = new List<string> { "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00" };
-    bool pref;
-    List<string> preferredDays = new List<string> { "none" };
+    //checkboxes for the days of the week
+    bool checkboxMon, checkboxTue, checkboxWed, checkboxThu, checkboxFri, checkboxSat, checkboxSun;
+    List<string> preferredDays = new List<string> { "" };
 
     protected override async Task OnInitializedAsync()
     {
@@ -199,12 +218,16 @@
 
     protected async Task Insert()
     {
+        //add the preferred days
+        await AddDays();
+        string days = ListToString(preferredDays);
         Employee e = new Employee()
         {
             EmployeeId = Guid.NewGuid().ToString(),
             FirstName = firstName,
             LastName = lastName,
-            Level = level
+            Level = level,
+            PreferredDays = days
         };
 
         await employeeService.InsertEmployeeAsync(e);
@@ -231,13 +254,17 @@
 
     protected async Task Update()
     {
+        //add the preferred days
+        await AddDays();
+        string days = ListToString(preferredDays);
         Employee e = new Employee()
         {
             EmployeeId = employeeId,
             FirstName = firstName,
             LastName = lastName,
             Level = level,
-            PreferredDays = preferredDays[0].ToString()
+            PreferredDays = days
+
         };
 
         await employeeService.UpdateEmployeeAsync(employeeId, e);
@@ -275,9 +302,47 @@
         ShowPopup = false;
     }
 
-    protected async Task AddDay(string day)
+    //Add the days to the list of preferred days if checked
+    protected async Task AddDays()
     {
-        preferredDays.Add(day);
+        EditDays(checkboxMon, "Mon");
+        EditDays(checkboxTue, "Tue");
+        EditDays(checkboxWed, "Wed");
+        EditDays(checkboxThu, "Thu");
+        EditDays(checkboxFri, "Fri");
+        EditDays(checkboxSat, "Sat");
+        EditDays(checkboxSun, "Sun");
+
+
+    }
+
+    protected void EditDays(bool day, string dayName)
+    {
+        if (day)
+            preferredDays.Add(dayName);
+        else
+        {
+            preferredDays.Remove(dayName);
+        }
+    }
+
+    protected void Change()
+    {
+        StateHasChanged();
+    }
+
+    //convert all the strings in the list into one list
+    protected string ListToString(List<string> list)
+    {
+        string temp;
+        string final;
+        temp = string.Empty;
+        final = string.Empty;
+        foreach(string day in list)
+        {
+            temp = temp + day;
+        }
+        return temp;
     }
 
 }
