@@ -86,8 +86,19 @@
                             <RadzenAccordion Multiple="true">
                                 <Items>
                                     <RadzenAccordionItem Text="Monday">
-                                        <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="values" Multiple="true" Data="@times" TextProperty="TIme" ValueProperty="timeWork"
-                                                       Change="@Change" Style="margin-bottom: 20px; height:200px;" />
+                                        <div class="row">
+                                            <RadzenSelectBar @bind-Value="mondayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                <Items>
+                                                    @for(int i = 0; i < times.Count(); i++)
+                                                    {
+                                                        string time = times[i];
+                                                        int value = i + 1;
+                                                        <RadzenSelectBarItem Text=@time Value= "@value" />
+                                                    }
+
+                                                </Items>
+                                            </RadzenSelectBar>
+                                        </div>
                                     </RadzenAccordionItem>
                                     <RadzenAccordionItem Text="Tuesday">
                                         Tusday availability
@@ -156,6 +167,43 @@
                             <input placeholder="Level" @bind="@level" />
                             <br />
                             <h5>Availability</h5>
+                            <RadzenAccordion Multiple="true">
+                                <Items>
+                                    <RadzenAccordionItem Text="Monday">
+                                        <div class="row">
+                                            <RadzenSelectBar @bind-Value="mondayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                <Items>
+                                                    @for (int i = 0; i < times.Count(); i++)
+                                                    {
+                                                        string time = times[i];
+                                                        int value = i + 1;
+                                                        <RadzenSelectBarItem Text=@time Value="@value" />
+                                                    }
+
+                                                </Items>
+                                            </RadzenSelectBar>
+                                        </div>
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Tuesday">
+                                        Tusday availability
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Wednesday">
+                                        availability
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Thursday">
+                                        availability
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Friday">
+                                        availability
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Saturday">
+                                        availability
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Sunday">
+                                        availability
+                                    </RadzenAccordionItem>
+                                </Items>
+                            </RadzenAccordion>
 
                             <br />
                             <h5>Preferred Day(s)</h5>
@@ -188,18 +236,22 @@
     </Authorized>
 </AuthorizeView>
 @functions{
-        List<Employee> employees;
-        string employeeId;
-        string firstName;
-        string lastName;
-        string level;
+    List<Employee> employees;
+    string employeeId;
+    string firstName;
+    string lastName;
+    string level;
     private enum MODE { None, Add, EditDelete };
     MODE mode = MODE.None;
     Employee employee;
     bool ShowPopup = false;
-    IEnumerable<string> values = new string[] {""};
+
     List<string> daysOfWeek = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
-    IEnumerable<string> times = new List<string> { "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00" };
+
+    //Hold the times for each day 
+    IEnumerable<int> mondayTimeValues = new int[] { 0 };
+    List<string> times = new List<string> { "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00" };
+
     //checkboxes for the days of the week
     bool checkboxMon, checkboxTue, checkboxWed, checkboxThu, checkboxFri, checkboxSat, checkboxSun;
     List<string> preferredDays = new List<string> { "" };
@@ -243,6 +295,15 @@
         firstName = string.Empty;
         lastName = string.Empty;
         level = string.Empty;
+        preferredDays.Clear();
+        checkboxTue = false;
+        checkboxMon = false;
+        checkboxWed = false;
+        checkboxThu = false;
+        checkboxFri = false;
+        checkboxSat = false;
+        checkboxSun = false;
+
     }
 
     protected void Add()
