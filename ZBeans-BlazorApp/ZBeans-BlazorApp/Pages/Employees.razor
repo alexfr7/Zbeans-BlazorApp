@@ -40,6 +40,7 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Level</th>
+                        <th>Preferred Days</th>
                     </tr>
                 </thead>
 
@@ -52,6 +53,7 @@
                             <td>@item.FirstName</td>
                             <td>@item.LastName</td>
                             <td>@item.Level</td>
+                            <td>@item.PreferredDays</td>
                         </tr>
                     }
                 </tbody>
@@ -79,6 +81,7 @@
                             <br />
                             <input placeholder="Level" @bind="level" />
                             <br />
+
                             <h5>Availability</h5>
                             <RadzenAccordion Multiple="true">
                                 <Items>
@@ -109,7 +112,12 @@
                             <h5>Preferred Day(s)</h5>
                             @foreach (string day in daysOfWeek)
                             {
-                                <input value="@day" type="checkbox" name="Checked" />@day
+                                <input value="@day" type="checkbox" name="Checked" @bind="pref" />@day
+                                if (pref)
+                                {
+                                @AddDay(day)
+                                }
+
                             }
                             <br />
                         </div>
@@ -162,18 +170,20 @@
     </Authorized>
 </AuthorizeView>
 @functions{
-            List<Employee> employees;
-            string employeeId;
-            string firstName;
-            string lastName;
-            string level;
+        List<Employee> employees;
+        string employeeId;
+        string firstName;
+        string lastName;
+        string level;
     private enum MODE { None, Add, EditDelete };
-        MODE mode = MODE.None;
-        Employee employee;
-        bool ShowPopup = false;
-        IEnumerable<string> values = new string[] {""};
+    MODE mode = MODE.None;
+    Employee employee;
+    bool ShowPopup = false;
+    IEnumerable<string> values = new string[] {""};
     List<string> daysOfWeek = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
     IEnumerable<string> times = new List<string> { "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00" };
+    bool pref;
+    List<string> preferredDays = new List<string> { "none" };
 
     protected override async Task OnInitializedAsync()
     {
@@ -226,7 +236,8 @@
             EmployeeId = employeeId,
             FirstName = firstName,
             LastName = lastName,
-            Level = level
+            Level = level,
+            PreferredDays = preferredDays[0].ToString()
         };
 
         await employeeService.UpdateEmployeeAsync(employeeId, e);
@@ -262,6 +273,11 @@
         ClearFields();
         mode = MODE.None;
         ShowPopup = false;
+    }
+
+    protected async Task AddDay(string day)
+    {
+        preferredDays.Add(day);
     }
 
 }
