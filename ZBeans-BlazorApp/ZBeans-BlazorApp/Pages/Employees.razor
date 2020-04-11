@@ -54,6 +54,7 @@
                             <td>@item.LastName</td>
                             <td>@item.Level</td>
                             <td>@item.PreferredDays</td>
+                            <td>@item.MondayAvailability</td>
                         </tr>
                     }
                 </tbody>
@@ -249,7 +250,8 @@
     List<string> daysOfWeek = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
     //Hold the times for each day 
-    IEnumerable<int> mondayTimeValues = new int[] { 0 };
+    IEnumerable<int> mondayTimeValues = new int[] {  };
+    string mondayAvailability;
     List<string> times = new List<string> { "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00" };
 
     //checkboxes for the days of the week
@@ -273,13 +275,15 @@
         //add the preferred days
         await AddDays();
         string days = ListToString(preferredDays);
+        mondayAvailability = IEnumToString(mondayTimeValues);
         Employee e = new Employee()
         {
             EmployeeId = Guid.NewGuid().ToString(),
             FirstName = firstName,
             LastName = lastName,
             Level = level,
-            PreferredDays = days
+            PreferredDays = days,
+            MondayAvailability = mondayAvailability
         };
 
         await employeeService.InsertEmployeeAsync(e);
@@ -318,13 +322,15 @@
         //add the preferred days
         await AddDays();
         string days = ListToString(preferredDays);
+        mondayAvailability = IEnumToString(mondayTimeValues);
         Employee e = new Employee()
         {
             EmployeeId = employeeId,
             FirstName = firstName,
             LastName = lastName,
             Level = level,
-            PreferredDays = days
+            PreferredDays = days,
+            MondayAvailability = mondayAvailability
 
         };
 
@@ -404,6 +410,41 @@
             temp = temp + day;
         }
         return temp;
+    }
+
+    //take in the days integer values from the buttons
+    //return a string of comma seoerated integers
+    protected string IEnumToString(IEnumerable<int> IE)
+    {
+        string s = string.Empty;
+        foreach (int value in IE)
+        {
+            s = s + "," + value.ToString();
+        }
+
+        //maybe eliminate the starting comma
+
+        return s;
+    }
+
+    //take in the string and parse it to set the buttons properly
+    //return the integer array
+    protected IEnumerable<int> IEnumToInts(string text)
+    {
+
+        int integer;
+        int index = 0;
+        int[] integers = new int[50];
+        string[] temp = text.Split(',');
+        foreach(string num in temp)
+        {
+            integer = Int32.Parse(num);
+            integers[index] = integer;
+            index++;
+        }
+
+        IEnumerable<int> final = integers;
+        return final;
     }
 
 }
