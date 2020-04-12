@@ -8,6 +8,9 @@
 
 @inject ScheduleService scheduleService
 @inject EmployeeService employeeService
+@inject DialogService  dialogService
+
+<RadzenDialog/>
 
 <h3>Schedule</h3>
 <h4>Week of @currWeek.ToString(@"MM/dd/yy") </h4>
@@ -46,10 +49,10 @@
                             dayIndex = j;
                             GetCellClass(j, i);
 
-                            
+
 
                     <td class="@cellClass">
-                        @GetEmployeeNum(j, i)<br /><button class="btn btn-outline-dark" @onclick="@AddEmployeeTest">Edit</button>
+                        @GetEmployeeNum(j, i) / @GetRequiredNum(j, i)<br /><RadzenButton class="btn btn-outline-dark" Text="Edit" Click="@(args => dialogService.Open<RadzenCard>(title: "title"))">Edit</RadzenButton>
                     </td>
                         }
                     </tr>
@@ -89,6 +92,11 @@
     protected int GetEmployeeNum(int dayIndex, int slotIndex)
     {
         return schedule[dayIndex].GetEmployees(slotIndex).Count;
+    }
+
+    protected int GetRequiredNum(int dayIndex, int slotIndex)
+    {
+        return schedule[dayIndex].EmployeeRequirements()[slotIndex];
     }
 
     protected string GetScheduleValue(int index)
@@ -132,9 +140,9 @@
 
         List<Employee> slotEmployees = cellDay.GetEmployees(timeIndex);
 
-        if(slotEmployees.Count == 0)
+        if(slotEmployees.Count < cellDay.EmployeeRequirements()[timeIndex])
         {
-            cellClass = "bg-secondary";
+            cellClass = "bg-warning";
         }
         else
         {

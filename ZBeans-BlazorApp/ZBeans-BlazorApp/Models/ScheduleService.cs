@@ -12,8 +12,9 @@ namespace ZBeans_BlazorApp.Models
 
         StoreDbContext scheduleContext ;
         const string DefaultDaySlots = ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,";
-        
 
+        const string DefaultRequired = "0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2," +  //00:00 -> 8:00
+            "3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2,2,0,0,0,0";
         public ScheduleService(StoreDbContext _context)
         {
             scheduleContext = _context;
@@ -32,7 +33,18 @@ namespace ZBeans_BlazorApp.Models
             {
                 if(scheduleContext.Day.Find(dayTracker.AddDays(i)) == null)
                 {
-                    await InsertDayAsync(new Day { Date = dayTracker.AddDays(i), DailyScheduleList = DefaultDaySlots });
+                    Day tempDay = new Day { Date = dayTracker.AddDays(i), DailyScheduleList = DefaultDaySlots };
+                    Day prevWeekRequirements = scheduleContext.Day.Find(dayTracker.AddDays(i - 7));
+                    if(prevWeekRequirements != null)
+                    {
+                        tempDay.RequiredEmployees = prevWeekRequirements.RequiredEmployees;
+                    }
+
+                    else
+                    {
+                        tempDay.RequiredEmployees = DefaultRequired;
+                    }
+                    await InsertDayAsync(tempDay);
                 }
                 Week.Add(scheduleContext.Day.Find(dayTracker.AddDays(i)));
             }

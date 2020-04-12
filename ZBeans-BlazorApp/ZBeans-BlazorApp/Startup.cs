@@ -46,6 +46,7 @@ namespace ZBeans_BlazorApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+            services.AddScoped<Radzen.DialogService>();
             services.AddSingleton<WeatherForecastService>();
         }
 

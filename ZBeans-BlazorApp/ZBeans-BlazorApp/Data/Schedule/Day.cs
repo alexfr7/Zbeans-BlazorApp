@@ -16,6 +16,8 @@ namespace ZBeans_BlazorApp.Data.Schedule
 
         public string DailyScheduleList { get; set; } = "";
 
+        public string RequiredEmployees { get; set; } = "";
+
         // Data handling will go through here.
         private List<List<Employee>> TimeSlots = new List<List<Employee>>(48);
 
@@ -50,13 +52,7 @@ namespace ZBeans_BlazorApp.Data.Schedule
             // Prioritized List of Possible Choices
             List<Employee> PossibleChoices = new List<Employee>();
 
-            for(int i = 0; i < employees.Count; i++)
-            {
-                if(employees[i].IsAvailable(dayOfWeek, indexOfSlot))
-                {
-                    PossibleChoices.Add(employees[i]);
-                }
-            }
+           
 
             return PossibleChoices;
         }
@@ -138,7 +134,18 @@ namespace ZBeans_BlazorApp.Data.Schedule
             TimeSlots = TempTimeSlot;
         }
 
+        public List<int> EmployeeRequirements()
+        {
+            string[] numList = RequiredEmployees.Split(',');
+            List<int> requirements = new List<int>();
 
+            for(int i = 0; i < 48; i++)
+            { 
+                requirements.Add(Convert.ToInt32(numList[i]));
+            }
+
+            return requirements;
+        }
 
     }
 }
