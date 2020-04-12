@@ -239,7 +239,44 @@
                             <br />
                             <input placeholder="Level" @bind="@level" />
                             <br />
-                            <h5>Availability</h5>
+                            <RadzenAccordion Multiple="true">
+                                <Items>
+                                    <RadzenAccordionItem Text="Current Availability">
+                                        <RadzenAccordion Multiple="true">
+                                            <Items>
+                                                <RadzenAccordionItem Text="Monday">
+                                                    @mondayCurrentHours
+                                                </RadzenAccordionItem>
+                                                <RadzenAccordionItem Text="Tuesday">
+                                                    @tuesdayCurrentHours
+                                                </RadzenAccordionItem>
+                                                <RadzenAccordionItem Text="Wednesday">
+                                                    @wednesdayCurrentHours
+                                                </RadzenAccordionItem>
+                                                <RadzenAccordionItem Text="Thursday">
+                                                    @thursdayCurrentHours
+                                                </RadzenAccordionItem>
+                                                <RadzenAccordionItem Text="Friday">
+                                                    @fridayCurrentHours
+                                                </RadzenAccordionItem>
+                                                <RadzenAccordionItem Text="Saturday">
+                                                    @saturdayCurrentHours
+                                                </RadzenAccordionItem>
+                                                <RadzenAccordionItem Text="Sunday">
+                                                    @sundayCurrentHours
+                                                </RadzenAccordionItem>
+                                            </Items>
+                                        </RadzenAccordion>
+                                    </RadzenAccordionItem>
+                                </Items>
+                            </RadzenAccordion>
+                            <button class="btn btn-outline-primary" @onclick="@EditSchedule">
+                                New Availability
+                            </button>
+                            @if (EditingSchedule)
+                            {
+                            <h6>New Availability</h6>
+
                             <RadzenAccordion Multiple="true">
                                 <Items>
                                     <RadzenAccordionItem Text="Monday">
@@ -349,7 +386,7 @@
                                     </RadzenAccordionItem>
                                 </Items>
                             </RadzenAccordion>
-
+                            }
                             <br />
                             <h5>Preferred Day(s)</h5>
                             <RadzenCheckBox @bind-Value="@checkboxMon" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
@@ -390,6 +427,7 @@
     MODE mode = MODE.None;
     Employee employee;
     bool ShowPopup = false;
+    bool EditingSchedule = false;
 
     List<string> daysOfWeek = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
@@ -403,6 +441,9 @@
     //checkboxes for the days of the week
     bool checkboxMon, checkboxTue, checkboxWed, checkboxThu, checkboxFri, checkboxSat, checkboxSun;
     List<string> preferredDays = new List<string> { "" };
+
+    //the current hours being worked by an employee
+    string mondayCurrentHours, tuesdayCurrentHours, wednesdayCurrentHours, thursdayCurrentHours, fridayCurrentHours, saturdayCurrentHours, sundayCurrentHours;
 
     protected override async Task OnInitializedAsync()
     {
@@ -471,6 +512,18 @@
 
     }
 
+    protected void ClearTimeButtons()
+    {
+        IEnumerable<int> empty = new int []{ };
+        mondayTimeValues = empty;
+        tuesdayTimeValues = empty;
+        wednesdayTimeValues = empty;
+        thursdayTimeValues = empty;
+        fridayTimeValues = empty;
+        saturdayTimeValues = empty;
+        sundayTimeValues = empty;
+
+    }
     protected void Add()
     {
         ClearFields();
@@ -519,6 +572,7 @@
         firstName = employee.FirstName;
         lastName = employee.LastName;
         level = employee.Level;
+        mondayCurrentHours = NumsToTimes(employee.MondayAvailability);
         mode = MODE.EditDelete;
         ShowPopup = true;
     }
@@ -610,10 +664,12 @@
         return final;
     }
 
+    //turn the string of values from the database into times
+    //return times as a string
     protected string NumsToTimes(string availabilityNums)
     {
-        string t = "Error";
-        if (availabilityNums == "")
+        string t = string.Empty;
+        if (availabilityNums == "" || availabilityNums == null)
             return "Not Scheduled";
         else {
             //make a dictionary of times and values
@@ -632,8 +688,15 @@
                 integer = Int32.Parse(num);
                 t = t + ',' + timesDict[integer];
             }
+            t = t.Remove(0, 1);
             return t;
         }
+
+    }
+
+    protected void EditSchedule()
+    {
+        EditingSchedule = true;
     }
 
 }
