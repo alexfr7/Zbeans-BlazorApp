@@ -10,14 +10,7 @@ namespace ZBeans_BlazorApp.Models
     public class StoreDbContext : DbContext
     {
         public DbSet<Employee> Employees { get; set; }
-        public DbSet<Day> Monday { get; set; }
-        public DbSet<Day> Tuesday { get; set; }
-        public DbSet<Day> Wednesday { get; set; }
-        public DbSet<Day> Thursday { get; set; }
-        public DbSet<Day> Friday { get; set; }
-        public DbSet<Day> Saturday { get; set; }
-        public DbSet<Day> Sunday { get; set; }
-
+        public DbSet<Day> Day { get; set; }
         public StoreDbContext(DbContextOptions<StoreDbContext> options) : base(options) { }
         
         protected override void OnModelCreating(ModelBuilder builder)

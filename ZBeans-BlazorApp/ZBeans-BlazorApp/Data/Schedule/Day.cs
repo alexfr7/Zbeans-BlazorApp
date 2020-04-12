@@ -27,7 +27,10 @@ namespace ZBeans_BlazorApp.Data.Schedule
             }
         }
 
-
+        public List<Employee> GetEmployees(int slot)
+        {
+            return TimeSlots[slot];
+        }
         public void AddEmployee(int i, Employee employee)
         {
             TimeSlots[i].Add(employee);

@@ -3,58 +3,70 @@
 @using Radzen
 @using Models
 @using ZBeans_BlazorApp.Data.Schedule;
+
 @using Microsoft.EntityFrameworkCore
 
 @inject ScheduleService scheduleService
-@inject EmployeeService employeeService 
+@inject EmployeeService employeeService
 
 <h3>Schedule</h3>
 <h4>Week of @currWeek.ToString(@"MM/dd/yy") </h4>
-<button @onclick="@TestDebug" class="btn btn-warning">@TestResult()</button>
-<table class="table table-sm">
-    <thead>
-        <tr>
-            <th scope="col">Time</th>
-            <th scope="col">Monday</th>
-            <th scope="col">Tuesday</th>
-            <th scope="col">Wednesday</th>
-            <th scope="col">Thursday</th>
-            <th scope="col">Friday</th>
-            <th scope="col">Saturday</th>
-            <th scope="col">Sunday</th>
-        </tr>
-    </thead>
-    <tbody>
-    @if (schedule == null || employees == null)
-    {
-        <tr>
-            Loading...
-        </tr>
-    }
-    else
-    {
-        @for (int i = 0; i < 48; i++)
-        {
+<button @onclick="@TestDebug" class="btn btn-warning">Test Debug</button>
+<div class="table-responsive">
+    <table class="table table-sm">
+        <thead>
             <tr>
-                <td> @TimeSpan.FromMinutes(i * 30).ToString(@"hh\:mm") </td>
-                <td><button class="btn btn-outline-dark">@GetScheduleValue(0)</button> </td>
-                <td><button class="btn btn-outline-dark">@GetScheduleValue(1)</button></td>
-                <td><button class="btn btn-outline-dark">@GetScheduleValue(2)</button></td>
-                <td><button class="btn btn-outline-dark">@GetScheduleValue(3)</button></td>
-                <td><button class="btn btn-outline-dark">@GetScheduleValue(4)</button></td>
-                <td><button class="btn btn-outline-dark">@GetScheduleValue(5)</button></td>
-                <td><button class="btn btn-outline-dark">@GetScheduleValue(6)</button></td>
+                <th scope="col">Time</th>
+                <th scope="col">Monday</th>
+                <th scope="col">Tuesday</th>
+                <th scope="col">Wednesday</th>
+                <th scope="col">Thursday</th>
+                <th scope="col">Friday</th>
+                <th scope="col">Saturday</th>
+                <th scope="col">Sunday</th>
             </tr>
-        }
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @if (schedule == null || employees == null)
+            {
+                <tr>
+                    Loading...
+                </tr>
+            }
+            else
+            {
+                @for (int i = 0; i < 48; i++)
+                {
+                    <tr>
+                        <td class="bg-secondary"> @TimeSpan.FromMinutes(i * 30).ToString(@"hh\:mm") </td>
+                        @{GetCellClass(0, i);}
+                        <td class="@cellClass"><button class="btn btn-outline-dark" @onclick="@AddEmployeeTest(0,i)">Edit</button> </td>
+                        @{GetCellClass(1, i);}
+                        <td class="@cellClass"><button class="btn btn-outline-dark" @onclick="@AddEmployeeTest(0,i)">Edit</button></td>
+                        @{GetCellClass(2, i);}
+                        <td class="@cellClass"><button class="btn btn-outline-dark" @onclick="@AddEmployeeTest(0,i)">Edit</button></td>
+                        @{GetCellClass(3, i);}
+                        <td class="@cellClass"><button class="btn btn-outline-dark" @onclick="@AddEmployeeTest(0,i)">Edit</button></td>
+                        @{GetCellClass(4, i);}
+                        <td class="@cellClass"><button class="btn btn-outline-dark" @onclick="@AddEmployeeTest(0,i)">Edit</button></td>
+                        @{GetCellClass(5, i);}
+                        <td class="@cellClass"><button class="btn btn-outline-dark" @onclick="@AddEmployeeTest(0,i)">Edit</button></td>
+                        @{GetCellClass(6, i);}
+                        <td class="@cellClass"><button class="btn btn-outline-dark" @onclick="@AddEmployeeTest(0,i)">Edit</button></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
 
 
 @functions {
     TimeSpan timeTrack = new TimeSpan(0, 0, 0);
     DateTime currWeek = DateTime.Now.StartOfWeek(DayOfWeek.Monday);
 
+    string cellClass;
+    public string testDebug { get; set; }
     public List<Day> schedule;
     List<Employee> employees;
 
@@ -73,7 +85,7 @@
     protected string GetScheduleValue(int index)
     {
         string test;
-        if(schedule[index] == null)
+        if (schedule[index] == null)
         {
             test = "none";
         }
@@ -85,19 +97,41 @@
         return test;
     }
 
-    protected void TestDebug()
+    protected EventCallback AddEmployeeTest(int _dayIndex, int timeIndex)
     {
-        scheduleService.InsertDayAsync(new Day
-        { Date = DateTime.Now, DailyScheduleList = "TestList" }, DayOfWeek.Thursday);
 
     }
 
-    protected async Task<string> TestResult()
+    protected async void TestDebug()
     {
+        await scheduleService.InsertDayAsync(new Day
+        { Date = DateTime.Now.Date, DailyScheduleList = "TestList" });
+
         Day wednesdayTest = (await scheduleService.GetScheduleAsync(DateTime.Now))[3];
         if (wednesdayTest == null)
-            return "TestList";
+            testDebug = "TestList";
         else
-            return wednesdayTest.DailyScheduleList;
+            testDebug = wednesdayTest.DailyScheduleList;
+
+
     }
+
+    protected void GetCellClass(int _dayIndex, int timeIndex)
+    {
+        Day cellDay = schedule[_dayIndex];
+
+        List<Employee> slotEmployees = cellDay.GetEmployees(timeIndex);
+
+        if(slotEmployees.Count == 0)
+        {
+            cellClass = "bg-secondary";
+        }
+        else
+        {
+            cellClass = "bg-success";
+        }
+
+    }
+
+
 }
