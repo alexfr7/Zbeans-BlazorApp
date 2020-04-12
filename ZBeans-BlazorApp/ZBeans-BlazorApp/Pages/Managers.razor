@@ -322,11 +322,16 @@
         //"ADMIN"
 
         var roleResult = await _RoleManager.FindByNameAsync(ADMIN);
+        var roleResultU = await _RoleManager.FindByNameAsync(USER);
         //Make ADMIN a role
 
         if (roleResult == null)
         {
             await _RoleManager.CreateAsync(new IdentityRole(ADMIN));
+        }
+        if(roleResultU == null)
+        {
+            await _RoleManager.CreateAsync(new IdentityRole(USER));
         }
 
         // we would put carters email here

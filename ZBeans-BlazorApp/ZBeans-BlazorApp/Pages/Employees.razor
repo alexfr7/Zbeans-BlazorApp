@@ -510,6 +510,7 @@
         checkboxSat = false;
         checkboxSun = false;
 
+
     }
 
     protected void ClearTimeButtons()
@@ -537,22 +538,48 @@
         await AddDays();
         string days = ListToString(preferredDays);
         mondayAvailability = IEnumToString(mondayTimeValues);
-        Employee e = new Employee()
+
+        Employee time = await employeeService.GetEmployeeByIdAsync(employeeId);
+        if (EditingSchedule)
         {
-            EmployeeId = employeeId,
-            FirstName = firstName,
-            LastName = lastName,
-            Level = level,
-            PreferredDays = days,
-            MondayAvailability = mondayAvailability
+            //only if we want to change the time, otherwise don't touch the availability
+            Employee e = new Employee()
+            {
+                EmployeeId = employeeId,
+                FirstName = firstName,
+                LastName = lastName,
+                Level = level,
+                PreferredDays = days,
+                MondayAvailability = mondayAvailability,
+                TuesdayAvailability = tuesdayAvailability,
+                WednesdayAvailability = wednesdayAvailability
 
-        };
+            };
+            await employeeService.UpdateEmployeeAsync(employeeId, e);
+        }
 
-        await employeeService.UpdateEmployeeAsync(employeeId, e);
+        else
+        {
+            Employee e = new Employee()
+            {
+                EmployeeId = employeeId,
+                FirstName = firstName,
+                LastName = lastName,
+                Level = level,
+                PreferredDays = days,
+                MondayAvailability = time.MondayAvailability,
+                TuesdayAvailability = time.TuesdayAvailability,
+                WednesdayAvailability = time.WednesdayAvailability
+
+            };
+            await employeeService.UpdateEmployeeAsync(employeeId, e);
+        }
+
         ClearFields();
         await load();
         mode = MODE.None;
         ShowPopup = false;
+        EditingSchedule = false;
 
     }
 
@@ -696,6 +723,7 @@
 
     protected void EditSchedule()
     {
+        ClearTimeButtons();
         EditingSchedule = true;
     }
 
