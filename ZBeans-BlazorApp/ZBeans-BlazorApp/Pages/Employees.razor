@@ -584,8 +584,10 @@
         }
 
         //maybe eliminate the starting comma
-
-        return s;
+        if (s.Length > 0)
+            return s.Remove(0, 1);
+        else
+            return s;
     }
 
     //take in the string and parse it to set the buttons properly
@@ -606,6 +608,32 @@
 
         IEnumerable<int> final = integers;
         return final;
+    }
+
+    protected string NumsToTimes(string availabilityNums)
+    {
+        string t = "Error";
+        if (availabilityNums == "")
+            return "Not Scheduled";
+        else {
+            //make a dictionary of times and values
+            IDictionary<int, string> timesDict = new Dictionary<int, string>();
+            int value = 1;
+            foreach(string time in times)
+            {
+                timesDict.Add(value, time);
+                value++;
+            }
+            List<string> nums = availabilityNums.Split(',').ToList();
+            int integer;
+            //find match values in the nums into the dictionary
+            foreach (string num in nums)
+            {
+                integer = Int32.Parse(num);
+                t = t + ',' + timesDict[integer];
+            }
+            return t;
+        }
     }
 
 }
