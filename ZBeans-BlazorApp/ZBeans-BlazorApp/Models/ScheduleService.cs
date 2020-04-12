@@ -11,7 +11,7 @@ namespace ZBeans_BlazorApp.Models
     {
 
         StoreDbContext scheduleContext ;
-
+        const string DefaultDaySlots = ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,";
         
 
         public ScheduleService(StoreDbContext _context)
@@ -28,15 +28,14 @@ namespace ZBeans_BlazorApp.Models
             // Get the first day of the requested week, at Monday.
             DateTime dayTracker = WeekOfYear.StartOfWeek(DayOfWeek.Monday);
 
-            
-            Week.Add(scheduleContext.Day.Find(dayTracker)); //Monday
-            Week.Add(scheduleContext.Day.Find(dayTracker.AddDays(1))); //Tuesday
-            Week.Add(scheduleContext.Day.Find(dayTracker.AddDays(2))); //Wednesday
-            Week.Add(scheduleContext.Day.Find(dayTracker.AddDays(3))); //Thursday
-            Week.Add(scheduleContext.Day.Find(dayTracker.AddDays(4))); //Friday
-            Week.Add(scheduleContext.Day.Find(dayTracker.AddDays(5)));
-            Week.Add(scheduleContext.Day.Find(dayTracker.AddDays(6)));
-
+            for(int i = 0; i < 7; i++)
+            {
+                if(scheduleContext.Day.Find(dayTracker.AddDays(i)) == null)
+                {
+                    await InsertDayAsync(new Day { Date = dayTracker.AddDays(i), DailyScheduleList = DefaultDaySlots });
+                }
+                Week.Add(scheduleContext.Day.Find(dayTracker.AddDays(i)));
+            }
             return Week;
 
         }
@@ -48,6 +47,29 @@ namespace ZBeans_BlazorApp.Models
 
             await scheduleContext.SaveChangesAsync();
             
+        }
+
+        // Replaces the previous entry at a certain day with a new one.
+        public async Task ReplaceDayAsync(DateTime date, Day day)
+        {
+
+            Day tempday = scheduleContext.Day.Find(date);
+            tempday.DailyScheduleList = day.DailyScheduleList;
+            scheduleContext.Day.Update(tempday);
+            await scheduleContext.SaveChangesAsync();
+
+        }
+
+        public async Task<Day> GetDayAsync(Day day)
+        {
+            return await scheduleContext.Day.FindAsync(day.Date);
+        }
+
+
+        public async Task AddEmployeeAsync(Employee employee, Day day, int timeSlot)
+        {
+            day.AddEmployee(timeSlot, employee);
+            await ReplaceDayAsync(day.Date, day);
         }
 
 

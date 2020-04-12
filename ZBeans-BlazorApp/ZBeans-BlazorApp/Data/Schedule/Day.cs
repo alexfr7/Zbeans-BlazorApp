@@ -61,7 +61,7 @@ namespace ZBeans_BlazorApp.Data.Schedule
             return PossibleChoices;
         }
 
-        private void ParseToScheduleList()
+        public void ParseToScheduleList()
         {
             // Schedule times separated by commas; employee id's separated by semicolons
             string DaySchedule = "";
@@ -88,6 +88,10 @@ namespace ZBeans_BlazorApp.Data.Schedule
 
             int slotCt = 0;
             List<List<Employee>> TempTimeSlot = new List<List<Employee>>(48);
+            for(int i = 0; i < TempTimeSlot.Capacity; i++)
+            {
+                TempTimeSlot.Add(new List<Employee>());
+            }
 
             while (slotCt < 48)
             {
@@ -102,6 +106,10 @@ namespace ZBeans_BlazorApp.Data.Schedule
                 while(empIndexStart < EmployeesAtTime.Length)
                 {
                     empIndexEnd = EmployeesAtTime.IndexOf(';');
+                    if(empIndexEnd == -1)
+                    {
+                        empIndexEnd = 0;
+                    }
                     string EmployeeID = EmployeesAtTime.Substring(empIndexStart, empIndexEnd - empIndexStart);
 
                     //Add the employee id to the time slot list if it matches one we already have.
