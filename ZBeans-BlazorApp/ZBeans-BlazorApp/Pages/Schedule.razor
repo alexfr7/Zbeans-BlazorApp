@@ -50,10 +50,9 @@
                             GetCellClass(j, i);
 
 
-
-                    <td class="@cellClass">
-                        @GetEmployeeNum(j, i) / @GetRequiredNum(j, i)<br /><RadzenButton class="btn btn-outline-dark" Text="Edit" Click="@(args => dialogService.Open<RadzenCard>(title: "title"))">Edit</RadzenButton>
-                    </td>
+                            <td class="@cellClass text-center">
+                                @GetEmployeeNum(j, i) / @GetRequiredNum(j, i)<br /><RadzenButton class="btn btn-outline-dark" Text="Edit" Click="@(args => dialogService.Open<RadzenCard>(title: "title"))">Edit</RadzenButton>
+                            </td>
                         }
                     </tr>
                 }
