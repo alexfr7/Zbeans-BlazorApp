@@ -421,7 +421,16 @@
         //add the preferred days
         await AddDays();
         string days = ListToString(preferredDays);
+
+        //convert the array of times for each day into a string for the database
         mondayAvailability = IEnumToString(mondayTimeValues);
+        tuesdayAvailability = IEnumToString(tuesdayTimeValues);
+        wednesdayAvailability = IEnumToString(wednesdayTimeValues);
+        thursdayAvailability = IEnumToString(thursdayTimeValues);
+        fridayAvailability = IEnumToString(fridayTimeValues);
+        saturdayAvailability = IEnumToString(saturdayTimeValues);
+        sundayAvailability = IEnumToString(sundayTimeValues);
+
         Employee e = new Employee()
         {
             EmployeeId = Guid.NewGuid().ToString(),
@@ -429,7 +438,13 @@
             LastName = lastName,
             Level = level,
             PreferredDays = days,
-            MondayAvailability = mondayAvailability
+            MondayAvailability = mondayAvailability,
+            TuesdayAvailability = tuesdayAvailability,
+            WednesdayAvailability = wednesdayAvailability,
+            ThursdayAvailability = thursdayAvailability,
+            FridayAvailability = fridayAvailability,
+            SaturdayAvailability = saturdayAvailability,
+            SundayAvailability = sundayAvailability
         };
 
         await employeeService.InsertEmployeeAsync(e);
