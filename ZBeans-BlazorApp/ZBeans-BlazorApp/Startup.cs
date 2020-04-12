@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using ZBeans_BlazorApp.Areas.Identity;
 using ZBeans_BlazorApp.Data;
 using ZBeans_BlazorApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ZBeans_BlazorApp
 {
@@ -32,13 +33,15 @@ namespace ZBeans_BlazorApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddScoped<EmployeeService>();
             services.AddScoped<ScheduleService>();
             services.AddDbContext<StoreDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
             services.AddServerSideBlazor();

@@ -42,6 +42,15 @@ namespace ZBeans_BlazorApp.Models
             employee.FirstName = e.FirstName;
             employee.LastName = e.LastName;
             employee.Level = e.Level;
+            employee.MondayAvailability = e.MondayAvailability;
+            employee.PreferredDays = e.PreferredDays;
+            employee.TuesdayAvailability = e.TuesdayAvailability;
+            employee.WednesdayAvailability = e.WednesdayAvailability;
+            employee.ThursdayAvailability = e.ThursdayAvailability;
+            employee.FridayAvailability = e.FridayAvailability;
+            employee.SaturdayAvailability = e.SaturdayAvailability;
+            employee.SundayAvailability = e.SundayAvailability;
+
 
             _context.Employees.Update(employee);
             await _context.SaveChangesAsync();

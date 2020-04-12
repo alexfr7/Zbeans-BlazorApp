@@ -23,7 +23,9 @@ namespace ZBeans_BlazorApp.Models
                    EmployeeId = Guid.NewGuid().ToString(),
                    FirstName = "Alex",
                    LastName = "Frink",
-                   Level = "Experienced"
+                   Level = "Experienced",
+                   PreferredDays = "M",
+                   MondayAvailability = "10:00"
                },
 
                new
@@ -31,7 +33,9 @@ namespace ZBeans_BlazorApp.Models
                    EmployeeId = Guid.NewGuid().ToString(),
                    FirstName = "Nick",
                    LastName = "Rogie",
-                   Level = "Entry"
+                   Level = "Entry",
+                   PreferredDays = "T",
+                   MondayAvailability = "9:00"
 
                }
                 );

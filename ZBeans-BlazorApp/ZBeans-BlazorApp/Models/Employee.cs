@@ -16,24 +16,16 @@ namespace ZBeans_BlazorApp.Models
         [Required]
         public string Level { get; set; }
 
-        public List<bool[]> Availibility = new List<bool[]>(7);
+        public string PreferredDays { get; set; }
 
-        public Employee()
-        {
-            for(int i = 0; i < Availibility.Capacity; i++)
-            {
-                Availibility.Add(new bool[48]);
-                for(int j = 0; j < Availibility[i].Length; j++)
-                {
-                    Availibility[i][j] = false;
-                }
-            }
-        }
+        public string MondayAvailability { get; set; }
+        public string TuesdayAvailability { get; set; }
+        public string WednesdayAvailability { get; set; }
+        public string ThursdayAvailability { get; set; }
+        public string FridayAvailability { get; set; }
+        public string SaturdayAvailability { get; set; }
+        public string SundayAvailability { get; set; }
 
-        public bool IsAvailable(int dayOfWeek, int index)
-        {
-            return (Availibility[dayOfWeek][index]);
-        }
 
     }
 }
