@@ -431,10 +431,11 @@
 
     List<string> daysOfWeek = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
-    //Hold the times for each day 
+    //Hold the times for each day from the buttons
     //monday-sunday
     IEnumerable<int> mondayTimeValues = new int[] {  }; IEnumerable<int> tuesdayTimeValues = new int[] { }; IEnumerable<int> wednesdayTimeValues = new int[] { }; IEnumerable<int> thursdayTimeValues = new int[] { };
     IEnumerable<int> fridayTimeValues = new int[] { }; IEnumerable<int> saturdayTimeValues = new int[] { }; IEnumerable<int> sundayTimeValues = new int[] { };
+    //the availability times converted into a string
     string mondayAvailability, tuesdayAvailability, wednesdayAvailability, thursdayAvailability, fridayAvailability, saturdayAvailability, sundayAvailability;
     List<string> times = new List<string> { "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00" };
 
@@ -442,7 +443,7 @@
     bool checkboxMon, checkboxTue, checkboxWed, checkboxThu, checkboxFri, checkboxSat, checkboxSun;
     List<string> preferredDays = new List<string> { "" };
 
-    //the current hours being worked by an employee
+    //the current hours available to be worked by an employee
     string mondayCurrentHours, tuesdayCurrentHours, wednesdayCurrentHours, thursdayCurrentHours, fridayCurrentHours, saturdayCurrentHours, sundayCurrentHours;
 
     protected override async Task OnInitializedAsync()
@@ -537,12 +538,21 @@
         //add the preferred days
         await AddDays();
         string days = ListToString(preferredDays);
+
+        //make the availabilities into a ',' delimited string
         mondayAvailability = IEnumToString(mondayTimeValues);
+        tuesdayAvailability = IEnumToString(tuesdayTimeValues);
+        wednesdayAvailability = IEnumToString(wednesdayTimeValues);
+        thursdayAvailability = IEnumToString(thursdayTimeValues);
+        fridayAvailability = IEnumToString(fridayTimeValues);
+        saturdayAvailability = IEnumToString(saturdayTimeValues);
+        sundayAvailability = IEnumToString(sundayTimeValues);
 
         Employee time = await employeeService.GetEmployeeByIdAsync(employeeId);
+        //if we want to edit the schedule, clear it and start again
         if (EditingSchedule)
         {
-            //only if we want to change the time, otherwise don't touch the availability
+           
             Employee e = new Employee()
             {
                 EmployeeId = employeeId,
@@ -552,12 +562,17 @@
                 PreferredDays = days,
                 MondayAvailability = mondayAvailability,
                 TuesdayAvailability = tuesdayAvailability,
-                WednesdayAvailability = wednesdayAvailability
+                WednesdayAvailability = wednesdayAvailability,
+                ThursdayAvailability = thursdayAvailability,
+                FridayAvailability = fridayAvailability,
+                SaturdayAvailability = saturdayAvailability,
+                SundayAvailability = sundayAvailability
 
             };
             await employeeService.UpdateEmployeeAsync(employeeId, e);
         }
 
+        //otherwise don't touch the schedule
         else
         {
             Employee e = new Employee()
@@ -569,8 +584,11 @@
                 PreferredDays = days,
                 MondayAvailability = time.MondayAvailability,
                 TuesdayAvailability = time.TuesdayAvailability,
-                WednesdayAvailability = time.WednesdayAvailability
-
+                WednesdayAvailability = time.WednesdayAvailability,
+                ThursdayAvailability = time.ThursdayAvailability,
+                FridayAvailability = time.FridayAvailability,
+                SaturdayAvailability = time.SaturdayAvailability,
+                SundayAvailability = time.SundayAvailability
             };
             await employeeService.UpdateEmployeeAsync(employeeId, e);
         }
@@ -600,6 +618,12 @@
         lastName = employee.LastName;
         level = employee.Level;
         mondayCurrentHours = NumsToTimes(employee.MondayAvailability);
+        tuesdayCurrentHours = NumsToTimes(employee.TuesdayAvailability);
+        wednesdayCurrentHours = NumsToTimes(employee.WednesdayAvailability);
+        thursdayCurrentHours = NumsToTimes(employee.ThursdayAvailability);
+        fridayCurrentHours = NumsToTimes(employee.FridayAvailability);
+        saturdayCurrentHours = NumsToTimes(employee.SaturdayAvailability);
+        sundayCurrentHours = NumsToTimes(employee.SundayAvailability);
         mode = MODE.EditDelete;
         ShowPopup = true;
     }
