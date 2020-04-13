@@ -130,7 +130,7 @@
     protected async void ChangeWeek(int dayCt)
     {
         currWeek = currWeek.AddDays(dayCt);
-        await load();\
+        await load();
         this.StateHasChanged();    
 
     }
