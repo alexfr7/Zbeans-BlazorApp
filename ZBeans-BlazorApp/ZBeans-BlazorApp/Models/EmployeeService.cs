@@ -50,6 +50,8 @@ namespace ZBeans_BlazorApp.Models
             employee.FridayAvailability = e.FridayAvailability;
             employee.SaturdayAvailability = e.SaturdayAvailability;
             employee.SundayAvailability = e.SundayAvailability;
+            employee.Location = e.Location;
+       
 
 
             _context.Employees.Update(employee);

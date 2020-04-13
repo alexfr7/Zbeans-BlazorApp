@@ -24,7 +24,8 @@ namespace ZBeans_BlazorApp.Models
                    LastName = "Frink",
                    Level = "Experienced",
                    PreferredDays = "M",
-                   MondayAvailability = "10:00"
+                   MondayAvailability = "10:00",
+                   Location = "Mercer Village"
                },
 
                new
@@ -34,7 +35,8 @@ namespace ZBeans_BlazorApp.Models
                    LastName = "Rogie",
                    Level = "Entry",
                    PreferredDays = "T",
-                   MondayAvailability = "9:00"
+                   MondayAvailability = "9:00",
+                   Location = "Mercer Village"
 
                }
                 );

@@ -15,6 +15,8 @@ namespace ZBeans_BlazorApp.Models
         public string LastName { get; set; }
         [Required]
         public string Level { get; set; }
+        [Required]
+        public string Location { get; set; }
         public string PreferredDays { get; set; }
 
         public string MondayAvailability { get; set; }
