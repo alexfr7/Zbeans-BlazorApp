@@ -41,6 +41,7 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Level</th>
+                        <th>Location</th>
                         <th>Preferred Days</th>
                     </tr>
                 </thead>
@@ -54,6 +55,7 @@
                             <td>@item.FirstName</td>
                             <td>@item.LastName</td>
                             <td>@item.Level</td>
+                            <td>@item.Location</td>
                             <td>@item.PreferredDays</td>
                         </tr>
                     }
@@ -82,135 +84,144 @@
                             <br />
                             <input placeholder="Level" @bind="level" />
                             <br />
+                            <select class="form-control"
+                                    @bind="@location">
+                                <option value="Select">Select Location</option>
+                                @foreach (var option in locations)
+                                {
+                                    <option value="@option">
+                                        @option
+                                    </option>
+                                }
+                                </select>
+                                <h5>Availability</h5>
+                                <RadzenAccordion Multiple="true">
+                                    <Items>
+                                        <RadzenAccordionItem Text="Monday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="mondayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                            <h5>Availability</h5>
-                            <RadzenAccordion Multiple="true">
-                                <Items>
-                                    <RadzenAccordionItem Text="Monday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="mondayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                        <RadzenAccordionItem Text="Tuesday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="tuesdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                    <RadzenAccordionItem Text="Tuesday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="tuesdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                        <RadzenAccordionItem Text="Wednesday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="wednesdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                    <RadzenAccordionItem Text="Wednesday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="wednesdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                        <RadzenAccordionItem Text="Thursday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="thursdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                    <RadzenAccordionItem Text="Thursday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="thursdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                        <RadzenAccordionItem Text="Friday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="fridayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                    <RadzenAccordionItem Text="Friday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="fridayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                        <RadzenAccordionItem Text="Saturday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="saturdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                    <RadzenAccordionItem Text="Saturday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="saturdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                        <RadzenAccordionItem Text="Sunday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="sundayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                    <RadzenAccordionItem Text="Sunday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="sundayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                    </Items>
+                                </RadzenAccordion>
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                </Items>
-                            </RadzenAccordion>
-
-                            <h5>Preferred Day(s)</h5>
-                            <RadzenCheckBox @bind-Value="@checkboxMon" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
-                            <RadzenLabel Text="Monday" Component="checkboxMon" Style="margin-left: 5px;margin-bottom: 20px" />
-                            <RadzenCheckBox @bind-Value="@checkboxTue" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
-                            <RadzenLabel Text="Tuesday" Component="checkboxTue" Style="margin-left: 5px;margin-bottom: 20px" />
-                            <RadzenCheckBox @bind-Value="@checkboxWed" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
-                            <RadzenLabel Text="Wednesday" Component="checkboxWed" Style="margin-left: 5px;margin-bottom: 20px" />
-                            <RadzenCheckBox @bind-Value="@checkboxThu" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
-                            <RadzenLabel Text="Thursday" Component="checkboxThu" Style="margin-left: 5px;margin-bottom: 20px" />
-                            <br />
-                            <RadzenCheckBox @bind-Value="@checkboxFri" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
-                            <RadzenLabel Text="Friday" Component="checkboxFri" Style="margin-left: 5px;margin-bottom: 20px" />
-                            <RadzenCheckBox @bind-Value="@checkboxSat" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
-                            <RadzenLabel Text="Saturday" Component="checkboxSat" Style="margin-left: 5px;margin-bottom: 20px" />
-                            <RadzenCheckBox @bind-Value="@checkboxSun" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
-                            <RadzenLabel Text="Sunday" Component="checkboxSun" Style="margin-left: 5px;margin-bottom: 20px" />
-                            <br />
+                                <h5>Preferred Day(s)</h5>
+                                <RadzenCheckBox @bind-Value="@checkboxMon" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                                <RadzenLabel Text="Monday" Component="checkboxMon" Style="margin-left: 5px;margin-bottom: 20px" />
+                                <RadzenCheckBox @bind-Value="@checkboxTue" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                                <RadzenLabel Text="Tuesday" Component="checkboxTue" Style="margin-left: 5px;margin-bottom: 20px" />
+                                <RadzenCheckBox @bind-Value="@checkboxWed" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                                <RadzenLabel Text="Wednesday" Component="checkboxWed" Style="margin-left: 5px;margin-bottom: 20px" />
+                                <RadzenCheckBox @bind-Value="@checkboxThu" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                                <RadzenLabel Text="Thursday" Component="checkboxThu" Style="margin-left: 5px;margin-bottom: 20px" />
+                                <br />
+                                <RadzenCheckBox @bind-Value="@checkboxFri" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                                <RadzenLabel Text="Friday" Component="checkboxFri" Style="margin-left: 5px;margin-bottom: 20px" />
+                                <RadzenCheckBox @bind-Value="@checkboxSat" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                                <RadzenLabel Text="Saturday" Component="checkboxSat" Style="margin-left: 5px;margin-bottom: 20px" />
+                                <RadzenCheckBox @bind-Value="@checkboxSun" Style="margin-bottom: 20px" TValue="bool" Change="@Change" />
+                                <RadzenLabel Text="Sunday" Component="checkboxSun" Style="margin-left: 5px;margin-bottom: 20px" />
+                                <br />
                         </div>
                         <button @onclick="@Insert" class="btn btn-warning">Insert</button>
                         <button @onclick="@Cancel" class="btn btn-dark">Cancel</button>
@@ -240,6 +251,16 @@
                             <br />
                             <input placeholder="Level" @bind="@level" />
                             <br />
+                            <select class="form-control"
+                                    @bind="@location">
+                                <option value="Select">Select Location</option>
+                                @foreach (var option in locations)
+                                {
+                                    <option value="@option">
+                                        @option
+                                    </option>
+                                }
+                            </select>
                             <RadzenAccordion Multiple="true">
                                 <Items>
                                     <RadzenAccordionItem Text="Current Availability">
@@ -276,117 +297,117 @@
                             </button>
                             @if (EditingSchedule)
                             {
-                            <h6>New Availability</h6>
+                                <h6>New Availability</h6>
 
-                            <RadzenAccordion Multiple="true">
-                                <Items>
-                                    <RadzenAccordionItem Text="Monday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="mondayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                <RadzenAccordion Multiple="true">
+                                    <Items>
+                                        <RadzenAccordionItem Text="Monday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="mondayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                    <RadzenAccordionItem Text="Tuesday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="tuesdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                        <RadzenAccordionItem Text="Tuesday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="tuesdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                    <RadzenAccordionItem Text="Wednesday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="wednesdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                        <RadzenAccordionItem Text="Wednesday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="wednesdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                    <RadzenAccordionItem Text="Thursday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="thursdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                        <RadzenAccordionItem Text="Thursday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="thursdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                    <RadzenAccordionItem Text="Friday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="fridayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                        <RadzenAccordionItem Text="Friday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="fridayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                    <RadzenAccordionItem Text="Saturday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="saturdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                        <RadzenAccordionItem Text="Saturday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="saturdayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                    <RadzenAccordionItem Text="Sunday">
-                                        <div class="row">
-                                            <RadzenSelectBar @bind-Value="sundayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
-                                                <Items>
-                                                    @for (int i = 0; i < times.Count(); i++)
-                                                    {
-                                                        string time = times[i];
-                                                        int value = i + 1;
-                                                        <RadzenSelectBarItem Text=@time Value="@value" />
-                                                    }
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                        <RadzenAccordionItem Text="Sunday">
+                                            <div class="row">
+                                                <RadzenSelectBar @bind-Value="sundayTimeValues" TValue="int" Multiple="true" Change="@Change" Style="margin-bottom: 20px;">
+                                                    <Items>
+                                                        @for (int i = 0; i < times.Count(); i++)
+                                                        {
+                                                            string time = times[i];
+                                                            int value = i + 1;
+                                                            <RadzenSelectBarItem Text=@time Value="@value" />
+                                                        }
 
-                                                </Items>
-                                            </RadzenSelectBar>
-                                        </div>
-                                    </RadzenAccordionItem>
-                                </Items>
-                            </RadzenAccordion>
+                                                    </Items>
+                                                </RadzenSelectBar>
+                                            </div>
+                                        </RadzenAccordionItem>
+                                    </Items>
+                                </RadzenAccordion>
                             }
                             <br />
                             <h5>Preferred Day(s)</h5>
@@ -430,6 +451,10 @@
     bool ShowPopup = false;
     bool EditingSchedule = false;
 
+    //List ofZBeans locations
+    List<string> locations = new List<string> { "Coliseum", "Downtown", "Mercer Village" };
+    string location;
+    //Days of the week
     List<string> daysOfWeek = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
 
@@ -440,7 +465,8 @@
     IEnumerable<int> fridayTimeValues = new int[] { }; IEnumerable<int> saturdayTimeValues = new int[] { }; IEnumerable<int> sundayTimeValues = new int[] { };
     //the availability times converted into a string
     string mondayAvailability, tuesdayAvailability, wednesdayAvailability, thursdayAvailability, fridayAvailability, saturdayAvailability, sundayAvailability;
-    List<string> times = new List<string> { "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00" };
+    List<string> times = new List<string> { "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00",
+                                            "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00","21:30"};
 
     //checkboxes for the days of the week
     bool checkboxMon, checkboxTue, checkboxWed, checkboxThu, checkboxFri, checkboxSat, checkboxSun;
@@ -489,7 +515,8 @@
             ThursdayAvailability = thursdayAvailability,
             FridayAvailability = fridayAvailability,
             SaturdayAvailability = saturdayAvailability,
-            SundayAvailability = sundayAvailability
+            SundayAvailability = sundayAvailability,
+            Location = location
         };
 
         await employeeService.InsertEmployeeAsync(e);
@@ -513,6 +540,7 @@
         checkboxFri = false;
         checkboxSat = false;
         checkboxSun = false;
+        
 
 
     }
@@ -532,6 +560,7 @@
     protected void Add()
     {
         ClearFields();
+        ClearTimeButtons();
         mode = MODE.Add;
         ShowPopup = true;
     }
@@ -552,6 +581,7 @@
         sundayAvailability = IEnumToString(sundayTimeValues);
 
         Employee time = await employeeService.GetEmployeeByIdAsync(employeeId);
+        location = time.Location;
         //if we want to edit the schedule, clear it and start again
         if (EditingSchedule)
         {
@@ -562,14 +592,15 @@
                 FirstName = firstName,
                 LastName = lastName,
                 Level = level,
-                PreferredDays = days,
+                PreferredDays = days, 
                 MondayAvailability = mondayAvailability,
                 TuesdayAvailability = tuesdayAvailability,
                 WednesdayAvailability = wednesdayAvailability,
                 ThursdayAvailability = thursdayAvailability,
                 FridayAvailability = fridayAvailability,
                 SaturdayAvailability = saturdayAvailability,
-                SundayAvailability = sundayAvailability
+                SundayAvailability = sundayAvailability,
+                Location = location
 
             };
             await employeeService.UpdateEmployeeAsync(employeeId, e);
@@ -591,11 +622,13 @@
                 ThursdayAvailability = time.ThursdayAvailability,
                 FridayAvailability = time.FridayAvailability,
                 SaturdayAvailability = time.SaturdayAvailability,
-                SundayAvailability = time.SundayAvailability
+                SundayAvailability = time.SundayAvailability,
+                Location = location
             };
             await employeeService.UpdateEmployeeAsync(employeeId, e);
         }
 
+        ClearTimeButtons();
         ClearFields();
         await load();
         mode = MODE.None;
@@ -627,6 +660,7 @@
         fridayCurrentHours = NumsToTimes(employee.FridayAvailability);
         saturdayCurrentHours = NumsToTimes(employee.SaturdayAvailability);
         sundayCurrentHours = NumsToTimes(employee.SundayAvailability);
+        location = employee.Location;
         mode = MODE.EditDelete;
         ShowPopup = true;
     }
