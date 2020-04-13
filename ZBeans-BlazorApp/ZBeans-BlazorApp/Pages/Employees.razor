@@ -537,6 +537,7 @@
         checkboxFri = false;
         checkboxSat = false;
         checkboxSun = false;
+        
 
 
     }
@@ -556,6 +557,7 @@
     protected void Add()
     {
         ClearFields();
+        ClearTimeButtons();
         mode = MODE.Add;
         ShowPopup = true;
     }
@@ -576,6 +578,7 @@
         sundayAvailability = IEnumToString(sundayTimeValues);
 
         Employee time = await employeeService.GetEmployeeByIdAsync(employeeId);
+        location = time.Location;
         //if we want to edit the schedule, clear it and start again
         if (EditingSchedule)
         {
@@ -586,7 +589,7 @@
                 FirstName = firstName,
                 LastName = lastName,
                 Level = level,
-                PreferredDays = days,
+                PreferredDays = days, 
                 MondayAvailability = mondayAvailability,
                 TuesdayAvailability = tuesdayAvailability,
                 WednesdayAvailability = wednesdayAvailability,
@@ -622,6 +625,7 @@
             await employeeService.UpdateEmployeeAsync(employeeId, e);
         }
 
+        ClearTimeButtons();
         ClearFields();
         await load();
         mode = MODE.None;
