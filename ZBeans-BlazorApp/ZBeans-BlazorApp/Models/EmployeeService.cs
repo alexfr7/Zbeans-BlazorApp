@@ -18,7 +18,7 @@ namespace ZBeans_BlazorApp.Models
 
         public async Task<List<Employee>> GetEmployeesAsync()
         {
-            return await _context.Employees.ToListAsync();
+            return await _context.Employees.ToLis();
         }
 
         public async Task<Employee> GetEmployeeByIdAsync(string id)

@@ -16,7 +16,9 @@
 
 <h3>Schedule</h3>
 <h4>Week of @currWeek.ToString(@"MM/dd/yy") </h4>
-<button @onclick="@TestDebug" class="btn btn-warning">Test Debug</button>
+<RadzenButton Icon="chevron_left" Click="@(()=>ChangeWeek(-7))"/>
+<RadzenButton Icon="chevron_right" Click="@(()=>ChangeWeek(7))" />
+
 <div class="table-responsive">
     <table class="table table-sm">
         <thead>
@@ -53,10 +55,10 @@
                             var localj = j;
                             GetCellClass(j, i);
                             <td class="@cellClass text-center">
-                                @GetEmployeeNum(j, i) / @GetRequiredNum(j, i)
+                                @GetEmployeeNum(localj, locali) / @GetRequiredNum(localj, locali)
                                 <br />
                                 <RadzenButton class="btn btn-outline-dark" Text="@TimeSpan.FromMinutes(i*30).ToString(@"hh\:mm")"
-                                    Click="@(args => dialogService.Open<DialogComponent>(title: ("Details for " + TimeSpan.FromMinutes(locali*30).ToString(@"hh\:mm")),
+                                    Click="@(args =>  dialogService.OpenAsync<DialogComponent>(title: ("Details for " + TimeSpan.FromMinutes(locali*30).ToString(@"hh\:mm")),
                                              new Dictionary<string,object>(){ { "employees", schedule[localj].GetEmployees(locali) },
                                                  {"PrioQueue", schedule[localj].SuggestedEmployees(localj, locali, employees) } }, new DialogOptions()))" />
                                         
@@ -73,14 +75,14 @@
 
 
 @functions {
-    TimeSpan timeTrack = new TimeSpan(0, 0, 0);
-    DateTime currWeek = DateTime.Now.StartOfWeek(DayOfWeek.Monday);
-    int dayIndex = 0;
-    int slotIndex = 0;
-    string cellClass;
+        TimeSpan timeTrack = new TimeSpan(0, 0, 0);
+        DateTime currWeek { get; set; } = DateTime.Now.StartOfWeek(DayOfWeek.Monday);
+        int dayIndex = 0;
+        int slotIndex = 0;
+        string cellClass { get; set; }
     public string testDebug { get; set; }
-    public List<Day> schedule;
-    List<Employee> employees;
+    public List<Day> schedule { get; set; }
+    List<Employee> employees { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,6 +92,7 @@
     protected async Task load()
     {
         employees = await employeeService.GetEmployeesAsync();
+        schedule = null;
         schedule = await scheduleService.GetScheduleAsync(currWeek, "Mercer Village");
         foreach(var day in schedule)
         {
@@ -124,11 +127,13 @@
     }
 
 
-    protected void AddEmployeeTest()
+    protected async void ChangeWeek(int dayCt)
     {
+        currWeek = currWeek.AddDays(dayCt);
+
+        await load();
 
     }
-
     protected async void TestDebug()
     {
         await scheduleService.InsertDayAsync(new Day
