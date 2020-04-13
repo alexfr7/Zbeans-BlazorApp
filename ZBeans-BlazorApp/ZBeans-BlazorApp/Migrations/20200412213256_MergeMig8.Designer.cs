@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZBeans_BlazorApp.Models;
 
 namespace ZBeans_BlazorApp.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    partial class StoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200412213256_MergeMig8")]
+    partial class MergeMig8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,6 +33,7 @@ namespace ZBeans_BlazorApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StoreSelect")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Date");
@@ -95,7 +98,7 @@ namespace ZBeans_BlazorApp.Migrations
                     b.HasData(
                         new
                         {
-                            EmployeeId = "3d55abc4-0787-4aa9-b551-4d61498ec9d6",
+                            EmployeeId = "84a832e0-f2f2-4286-ab92-e46c1e112b47",
                             FirstName = "Alex",
                             LastName = "Frink",
                             Level = "Experienced",
@@ -104,7 +107,7 @@ namespace ZBeans_BlazorApp.Migrations
                         },
                         new
                         {
-                            EmployeeId = "78c8efec-eed5-4f9b-9e99-e9e74fc7607f",
+                            EmployeeId = "a4241e90-0f46-4099-aacd-103363122c93",
                             FirstName = "Nick",
                             LastName = "Rogie",
                             Level = "Entry",

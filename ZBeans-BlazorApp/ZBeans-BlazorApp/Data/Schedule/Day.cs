@@ -11,12 +11,16 @@ namespace ZBeans_BlazorApp.Data.Schedule
     {
         // For storage of each day, we have to get creative
         // Store a delimited string with all of the employee info in it.
+        public static string[] Stores = { "Mercer Village", "Downtown", "Coliseum", "N/A"};
+
         [Key]
         public DateTime Date { get; set; }
 
         public string DailyScheduleList { get; set; } = "";
 
         public string RequiredEmployees { get; set; } = "";
+        
+        public string StoreSelect { get; set; } = "Mercer Village";
 
         // Data handling will go through here.
         private List<List<Employee>> TimeSlots = new List<List<Employee>>(48);

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZBeans_BlazorApp.Models;
 
 namespace ZBeans_BlazorApp.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    partial class StoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200412212639_MergeMig6")]
+    partial class MergeMig6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +45,7 @@ namespace ZBeans_BlazorApp.Migrations
                             Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DailyScheduleList = "",
                             RequiredEmployees = "",
-                            StoreSelect = "test"
+                            StoreSelect = ""
                         });
                 });
 
@@ -95,7 +97,7 @@ namespace ZBeans_BlazorApp.Migrations
                     b.HasData(
                         new
                         {
-                            EmployeeId = "3d55abc4-0787-4aa9-b551-4d61498ec9d6",
+                            EmployeeId = "d81d414e-5268-40df-9bc6-527570bbc435",
                             FirstName = "Alex",
                             LastName = "Frink",
                             Level = "Experienced",
@@ -104,7 +106,7 @@ namespace ZBeans_BlazorApp.Migrations
                         },
                         new
                         {
-                            EmployeeId = "78c8efec-eed5-4f9b-9e99-e9e74fc7607f",
+                            EmployeeId = "fcbdd6e6-5d48-486e-80f5-cde2da3598df",
                             FirstName = "Nick",
                             LastName = "Rogie",
                             Level = "Entry",

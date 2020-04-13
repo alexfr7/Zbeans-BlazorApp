@@ -39,13 +39,15 @@ namespace ZBeans_BlazorApp.Models
 
                }
                 );
-           
+
             builder.Entity<Day>().HasData(
                 new
                 {
-                    Date = DateTime.Now,
-                    DailyScheduleList = ""
-                }) ;
+                    Date = DateTime.MinValue,
+                    DailyScheduleList = "",
+                    RequiredEmployees = "",
+                    StoreSelect = "test",
+                });
         }
     }
 }

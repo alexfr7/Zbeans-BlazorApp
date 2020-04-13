@@ -1,0 +1,32 @@
+﻿@using Radzen.Blazor
+@using Radzen
+@using ZBeans_BlazorApp.Models;
+@using Microsoft.AspNetCore.Components
+
+
+<h2>Employees Currently Working</h2>
+<ol>
+@foreach(var emp in employees)
+{
+    <li>@(emp.FirstName)</li>
+}
+</ol>
+<hr />
+
+<h2>Add Employees</h2>
+<ol>
+    @foreach(var emp in PrioQueue)
+    {
+        <li>
+            @(emp.LastName + ", " + emp.FirstName)
+        </li>
+    }
+</ol>
+@code {
+
+    [Parameter]
+    public List<Employee> employees { get; set; }
+
+    [Parameter]
+    public List<Employee> PrioQueue { get; set; }
+}

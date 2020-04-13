@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZBeans_BlazorApp.Models;
 
 namespace ZBeans_BlazorApp.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    partial class StoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200412210635_MergeMig3")]
+    partial class MergeMig3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +32,7 @@ namespace ZBeans_BlazorApp.Migrations
                     b.Property<string>("RequiredEmployees")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StoreSelect")
+                    b.Property<string>("Store")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Date");
@@ -40,10 +42,8 @@ namespace ZBeans_BlazorApp.Migrations
                     b.HasData(
                         new
                         {
-                            Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DailyScheduleList = "",
-                            RequiredEmployees = "",
-                            StoreSelect = "test"
+                            Date = new DateTime(2020, 4, 12, 17, 6, 35, 166, DateTimeKind.Local).AddTicks(6922),
+                            DailyScheduleList = ""
                         });
                 });
 
@@ -95,7 +95,7 @@ namespace ZBeans_BlazorApp.Migrations
                     b.HasData(
                         new
                         {
-                            EmployeeId = "3d55abc4-0787-4aa9-b551-4d61498ec9d6",
+                            EmployeeId = "a6bc572c-d2ed-4402-a1c5-9ee6bbb91c10",
                             FirstName = "Alex",
                             LastName = "Frink",
                             Level = "Experienced",
@@ -104,7 +104,7 @@ namespace ZBeans_BlazorApp.Migrations
                         },
                         new
                         {
-                            EmployeeId = "78c8efec-eed5-4f9b-9e99-e9e74fc7607f",
+                            EmployeeId = "d97ea811-e404-4081-8a56-afa0aaf0a4ee",
                             FirstName = "Nick",
                             LastName = "Rogie",
                             Level = "Entry",

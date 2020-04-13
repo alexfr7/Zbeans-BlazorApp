@@ -21,7 +21,7 @@ namespace ZBeans_BlazorApp.Models
             
         }
 
-        public async Task<List<Day>> GetScheduleAsync(DateTime WeekOfYear)
+        public async Task<List<Day>> GetScheduleAsync(DateTime WeekOfYear, string storeName)
         {
             // List of 7 days to return
             List<Day> Week = new List<Day>(7);
@@ -44,6 +44,8 @@ namespace ZBeans_BlazorApp.Models
                     {
                         tempDay.RequiredEmployees = DefaultRequired;
                     }
+
+                    tempDay.StoreSelect = storeName;
                     await InsertDayAsync(tempDay);
                 }
                 Week.Add(scheduleContext.Day.Find(dayTracker.AddDays(i)));
