@@ -56,7 +56,7 @@ namespace ZBeans_BlazorApp.Data.Schedule
             // Prioritized List of Possible Choices
             List<Employee> PossibleChoices = new List<Employee>();
 
-           
+            //First, get all available employees from the list and place them at this time.
 
             return PossibleChoices;
         }
