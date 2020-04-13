@@ -39,6 +39,7 @@
                 <tr>
                     Loading...
                 </tr>
+                
             }
             else
             {
@@ -92,7 +93,6 @@
     protected async Task load()
     {
         employees = await employeeService.GetEmployeesAsync();
-        schedule = null;
         schedule = await scheduleService.GetScheduleAsync(currWeek, "Mercer Village");
         foreach(var day in schedule)
         {
@@ -130,8 +130,8 @@
     protected async void ChangeWeek(int dayCt)
     {
         currWeek = currWeek.AddDays(dayCt);
-
-        await load();
+        await load();\
+        this.StateHasChanged();    
 
     }
     protected async void TestDebug()
