@@ -4,83 +4,97 @@
 @using Models
 @using ZBeans_BlazorApp.Data.Schedule;
 @using ZBeans_BlazorApp.Pages
-
+@using Microsoft.AspNetCore.Identity
 
 @using Microsoft.EntityFrameworkCore
 
+@inject UserManager<IdentityUser> _UserManager
+@inject RoleManager<IdentityRole> _RoleManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ScheduleService scheduleService
 @inject EmployeeService employeeService
 @inject DialogService  dialogService
 
-<RadzenDialog/>
+<AuthorizeView Roles="User, Admin">
+    <NotAuthorized>
+        <p>You do not have permission to view this page. Please contact the Administrator for assistance.</p>
+    </NotAuthorized>
+    <Authorized>
+        <RadzenDialog />
 
-<h3>Schedule</h3>
-<h4>Week of @currWeek.ToString(@"MM/dd/yy") </h4>
-<RadzenButton Icon="chevron_left" Click="@(()=>ChangeWeek(-7))"/>
-<RadzenButton Icon="chevron_right" Click="@(()=>ChangeWeek(7))" />
+        <h3>Schedule</h3>
+        <h4>Week of @currWeek.ToString(@"MM/dd/yy") </h4>
+        <RadzenButton Icon="chevron_left" Click="@(()=>ChangeWeek(-7))" />
+        <RadzenButton Icon="chevron_right" Click="@(()=>ChangeWeek(7))" />
 
-<div class="table-responsive">
-    <table class="table table-sm">
-        <thead>
-            <tr class="text-center">
-                <th scope="col">Time</th>
-                <th scope="col">Monday</th>
-                <th scope="col">Tuesday</th>
-                <th scope="col">Wednesday</th>
-                <th scope="col">Thursday</th>
-                <th scope="col">Friday</th>
-                <th scope="col">Saturday</th>
-                <th scope="col">Sunday</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (schedule == null || employees == null)
-            {
-                <tr>
-                    Loading...
-                </tr>
-                
-            }
-            else
-            {
-                @for (int i = 0; i < 48; i++)
-                {
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr class="text-center">
+                        <th scope="col">Time</th>
+                        <th scope="col">Monday</th>
+                        <th scope="col">Tuesday</th>
+                        <th scope="col">Wednesday</th>
+                        <th scope="col">Thursday</th>
+                        <th scope="col">Friday</th>
+                        <th scope="col">Saturday</th>
+                        <th scope="col">Sunday</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (schedule == null || employees == null)
+                    {
+                        <tr>
+                            Loading...
+                        </tr>
 
-                    
-                    var locali = i;
-                    <tr>
-                        <td> @TimeSpan.FromMinutes(i * 30).ToString(@"hh\:mm") </td>
-                        @for (int j = 0; j < 7; j++)
+                    }
+                    else
+                    {
+                        @for (int i = 0; i < 48; i++)
                         {
 
-                            var localj = j;
-                            GetCellClass(j, i);
-                            <td class="@cellClass text-center">
-                                @GetEmployeeNum(localj, locali) / @GetRequiredNum(localj, locali)
-                                <br />
-                                <RadzenButton class="btn btn-outline-dark" Text="@TimeSpan.FromMinutes(i*30).ToString(@"hh\:mm")"
-                                    Click="@(args =>  dialogService.OpenAsync<DialogComponent>(title: ("Details for " + TimeSpan.FromMinutes(locali*30).ToString(@"hh\:mm")),
-                                             new Dictionary<string,object>(){ { "employees", schedule[localj].GetEmployees(locali) },
-                                                 {"PrioQueue", schedule[localj].SuggestedEmployees(localj, locali, employees) } }, new DialogOptions()))" />
-                                        
-                                   
-                                
-                            </td>
-                        }
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
-</div>
 
+                            var locali = i;
+                            <tr>
+                                <td> @TimeSpan.FromMinutes(i * 30).ToString(@"hh\:mm") </td>
+                                @for (int j = 0; j < 7; j++)
+                                {
+
+                                    var localj = j;
+                                    GetCellClass(j, i);
+                                    <td class="@cellClass text-center">
+                                        @GetEmployeeNum(localj, locali) / @GetRequiredNum(localj, locali)
+                                        <br />
+                                        <RadzenButton class="btn btn-outline-dark" Text="@TimeSpan.FromMinutes(i*30).ToString(@"hh\:mm")"
+                                                      Click="@(args =>  dialogService.OpenAsync<DialogComponent>(
+                                        title: ("Details for " + TimeSpan.FromMinutes(locali*30).ToString(@"hh\:mm")),
+                                        new Dictionary<string,object>(){
+                                            { "employees", schedule[localj].GetEmployees(locali) },
+                                            {"PrioQueue", schedule[localj].SuggestedEmployees(localj, locali, employees) },
+                                            {"parentService", scheduleService },
+                                            {"thisDay", schedule[localj] },
+                                            {"slot", locali },
+                                            {"sched", schedule } },
+                                        new DialogOptions()))" />
+
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </Authorized>
+</AuthorizeView>
 
 @functions {
-        TimeSpan timeTrack = new TimeSpan(0, 0, 0);
-        DateTime currWeek { get; set; } = DateTime.Now.StartOfWeek(DayOfWeek.Monday);
-        int dayIndex = 0;
-        int slotIndex = 0;
-        string cellClass { get; set; }
+    TimeSpan timeTrack = new TimeSpan(0, 0, 0);
+    DateTime currWeek { get; set; } = DateTime.Now.StartOfWeek(DayOfWeek.Monday);
+    int dayIndex = 0;
+    int slotIndex = 0;
+    string cellClass { get; set; }
     public string testDebug { get; set; }
     public List<Day> schedule { get; set; }
     List<Employee> employees { get; set; }
@@ -94,7 +108,7 @@
     {
         employees = await employeeService.GetEmployeesAsync();
         schedule = await scheduleService.GetScheduleAsync(currWeek, "Mercer Village");
-        foreach(var day in schedule)
+        foreach (var day in schedule)
         {
             day.ParseFromScheduleList(employees);
         }
@@ -131,7 +145,7 @@
     {
         currWeek = currWeek.AddDays(dayCt);
         await load();
-        this.StateHasChanged();    
+        this.StateHasChanged();
 
     }
     protected async void TestDebug()
@@ -154,7 +168,12 @@
 
         List<Employee> slotEmployees = cellDay.GetEmployees(timeIndex);
 
-        if(slotEmployees.Count < cellDay.EmployeeRequirements()[timeIndex])
+        if (cellDay.EmployeeRequirements()[timeIndex] == 0)
+        {
+            cellClass = "table-secondary";
+        }
+
+        else if (slotEmployees.Count < cellDay.EmployeeRequirements()[timeIndex])
         {
             cellClass = "bg-warning";
         }

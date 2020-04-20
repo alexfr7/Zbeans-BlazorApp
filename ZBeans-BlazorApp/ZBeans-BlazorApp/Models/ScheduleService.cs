@@ -86,6 +86,12 @@ namespace ZBeans_BlazorApp.Models
             await ReplaceDayAsync(day.Date, day);
         }
 
+        public async Task RemoveEmployeeAsync(Employee employee, Day day, int timeSlot)
+        {
+            day.RemoveEmployee(timeSlot, employee);
+            await ReplaceDayAsync(day.Date, day);
+        }
+
 
 
        

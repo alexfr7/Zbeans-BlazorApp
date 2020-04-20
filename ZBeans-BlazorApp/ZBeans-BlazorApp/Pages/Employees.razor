@@ -67,8 +67,9 @@
 
         @if (employees != null && mode == MODE.Add && ShowPopup) //Insert  Form
         {
-            <div class=" modal" overflow="visible" tabindex="-1" style="display:block" role="dialog">
-                <div class="modal-dialog">
+            
+            <div class="modal" overflow="visible" tabindex="-1" style="display:block" role="dialog">
+                <div class="modal-dialog-scrollable">
                     <div class=" modal-content">
                         <div class=" modal-header">
                             <h3 class="modal-title">Add New Employee</h3>
@@ -233,7 +234,7 @@
         @if (employees != null && mode == MODE.EditDelete && ShowPopup) //Update and Delete Form
         {
             <div class=" modal" tabindex="-1" style="display:block" role="dialog">
-                <div class="modal-dialog">
+                <div class="modal-dialog-scrollable">
                     <div class=" modal-content">
                         <div class=" modal-header">
                             <h3 class="modal-title">Edit or Delete Employee</h3>

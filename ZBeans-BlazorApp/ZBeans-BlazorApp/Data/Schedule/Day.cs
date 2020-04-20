@@ -57,6 +57,15 @@ namespace ZBeans_BlazorApp.Data.Schedule
             List<Employee> PossibleChoices = new List<Employee>();
 
             //First, get all available employees from the list and place them at this time.
+            foreach(var emp in employees)
+            {
+                if(emp.isAvailable(dayOfWeek, indexOfSlot) && !TimeSlots[indexOfSlot].Contains(emp))
+                {
+                    PossibleChoices.Add(emp);
+                }
+            }
+
+           
 
             return PossibleChoices;
         }
@@ -105,7 +114,7 @@ namespace ZBeans_BlazorApp.Data.Schedule
 
                 while(empIndexStart < EmployeesAtTime.Length)
                 {
-                    empIndexEnd = EmployeesAtTime.IndexOf(';');
+                    empIndexEnd = EmployeesAtTime.IndexOf(';',empIndexStart);
                     if(empIndexEnd == -1)
                     {
                         empIndexEnd = 0;

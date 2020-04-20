@@ -160,96 +160,97 @@
 
 
 @functions{
-    string defaultPassword = "123ABc!";
-    void AddNewUser()
-    {
-        //make a new user and open the popup
-        objUser = new IdentityUser();
-        objUser.PasswordHash = defaultPassword;
-        objUser.Id = "";
-        ShowPopup = true;
-    }
-
-    async Task SaveUser()
-    {
-        try
-        {
-
-            if (objUser.Id != "")
+            string defaultPassword = "123ABc!";
+            void AddNewUser()
             {
-                //get the user
-                var user = await _UserManager.FindByIdAsync(objUser.Id);
-                user.Email = objUser.Email;
-
-
-                //update the user
-                await _UserManager.UpdateAsync(user);
-
-
-                //handle roles
-                //is it in admin?
-                var UserResult = await _UserManager.IsInRoleAsync(user, ADMIN);
-                if ((CurrentUserRole == ADMIN) & (!UserResult))
-                {
-                    await _UserManager.AddToRoleAsync(user, ADMIN);
-                }
-                else
-                {
-                    if ((CurrentUserRole != ADMIN) & (UserResult))
-                    {
-                        await _UserManager.RemoveFromRoleAsync(user, ADMIN);
-                        await _UserManager.AddToRoleAsync(user, USER);
-                    }
-                }
-
+                //make a new user and open the popup
+                objUser = new IdentityUser();
+                objUser.PasswordHash = defaultPassword;
+                objUser.Id = "";
+                ShowPopup = true;
             }
 
-
-            else
+            async Task SaveUser()
             {
-                //insert new user
-                var NewUser = new IdentityUser
+                try
                 {
-                    UserName = objUser.UserName,
-                    Email = objUser.Email
-                };
 
-                var CreateResult = await _UserManager.CreateAsync(NewUser, objUser.PasswordHash);
-                if (!CreateResult.Succeeded)
-                {
-                    if (CreateResult.Errors.FirstOrDefault() != null)
+                    if (objUser.Id != "")
                     {
-                        strError = CreateResult.Errors.FirstOrDefault().Description;
+                        //get the user
+                        var user = await _UserManager.FindByIdAsync(objUser.Id);
+                        user.Email = objUser.Email;
+
+
+                        //update the user
+                        await _UserManager.UpdateAsync(user);
+
+
+                        //handle roles
+                        //is it in admin?
+                        var UserResult = await _UserManager.IsInRoleAsync(user, ADMIN);
+                        if ((CurrentUserRole == ADMIN) & (!UserResult))
+                        {
+                            await _UserManager.AddToRoleAsync(user, ADMIN);
+                        }
+                        else
+                        {
+                            if ((CurrentUserRole != ADMIN) & (UserResult))
+                            {
+                                await _UserManager.RemoveFromRoleAsync(user, ADMIN);
+                                await _UserManager.AddToRoleAsync(user, USER);
+                            }
+                        }
+
+                    }
+
+
+                    else
+                    {
+                        //insert new user
+                        var NewUser = new IdentityUser
+                        {
+                            UserName = objUser.UserName,
+                            Email = objUser.Email,
+                            EmailConfirmed = true
+                    };
+
+                    var CreateResult = await _UserManager.CreateAsync(NewUser, objUser.PasswordHash);
+                    if (!CreateResult.Succeeded)
+                    {
+                        if (CreateResult.Errors.FirstOrDefault() != null)
+                        {
+                            strError = CreateResult.Errors.FirstOrDefault().Description;
+                        }
+                        else
+                        {
+                            strError = "Error in User Creation";
+                        }
+
+                        //keep popup open
+                        return;
                     }
                     else
                     {
-                        strError = "Error in User Creation";
+                        //ROLE HANDLING
+                        if (CurrentUserRole == ADMIN)
+                        {
+                            await _UserManager.AddToRoleAsync(NewUser, ADMIN);
+                        }
+                        else
+                        {
+                            await _UserManager.AddToRoleAsync(NewUser, USER);
+                        }
                     }
 
-                    //keep popup open
-                    return;
+
+
                 }
-                else
-                {
-                    //ROLE HANDLING
-                    if (CurrentUserRole == ADMIN)
-                    {
-                        await _UserManager.AddToRoleAsync(NewUser, ADMIN);
-                    }
-                    else
-                    {
-                        await _UserManager.AddToRoleAsync(NewUser, USER);
-                    }
-                }
-
-
-
-            }
 
             //close popup
-            ShowPopup = false;
-            GetUsers();
-        }
+                ShowPopup = false;
+                GetUsers();
+            }
         catch (Exception e)
         {
             strError = e.GetBaseException().Message;

@@ -1,27 +1,61 @@
 ﻿@using Radzen.Blazor
 @using Radzen
 @using ZBeans_BlazorApp.Models;
+@using ZBeans_BlazorApp.Data.Schedule;
 @using Microsoft.AspNetCore.Components
 
+@inject ScheduleService scheduleService
 
 <h2>Employees Currently Working</h2>
-<ol>
-@foreach(var emp in employees)
-{
-    <li>@(emp.FirstName)</li>
-}
-</ol>
+<table>
+    @foreach (var emp in employees)
+    {
+        <tr>
+            <td>@(emp.LastName + ", " + emp.FirstName)</td>
+            <td><RadzenButton Click="@(() => RemoveFromSchedule(emp))" Text="Remove"/></td>
+        </tr>
+    }
+</table>
 <hr />
 
 <h2>Add Employees</h2>
-<ol>
-    @foreach(var emp in PrioQueue)
+<table class="table-bordered" cellpadding="10px">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Preferred Day</th>
+            <th>Is the employee at @(maxHrs.ToString()) hours yet?</th>
+            <th>Employee working immediately before?</th>
+        </tr>
+    </thead>
+    @foreach (var emp in Priority)
     {
-        <li>
-            @(emp.LastName + ", " + emp.FirstName)
-        </li>
+        if (maxVal < emp.Value) maxVal = emp.Value;
+        if (minVal > emp.Value) minVal = emp.Value;
     }
-</ol>
+
+    @for (int i = maxVal; i >= minVal; i--)
+    {
+        foreach (var emp in Priority)
+        {
+            if (emp.Value == i)
+            {
+                <tr>
+                    <td>@(emp.Key.LastName + ", " + emp.Key.FirstName)</td>
+                    <td>@prefersDay(emp.Key)</td>
+                    <td>@workedHrsDayAmt(emp.Key)</td>
+                    <td>@isInPrevSlot(emp.Key)</td>
+                    <td><RadzenButton Click="@(() => AddToSchedule(emp.Key))" Text="Add" /></td>
+                </tr>
+            }
+        }
+    }
+    @(maxVal = 0)
+</table>
+<hr />
+
+<h3>Set required amount of employees: <RadzenButton/></h3>
+
 @code {
 
     [Parameter]
@@ -29,4 +63,125 @@
 
     [Parameter]
     public List<Employee> PrioQueue { get; set; }
+
+    [Parameter]
+    public ScheduleService parentService { get; set; }
+
+    [Parameter]
+    public List<Day> sched { get; set; }
+
+    [Parameter]
+    public Day thisDay { get; set; }
+
+    [Parameter]
+    public int slot { get; set; }
+
+    Dictionary<Employee, int> Priority { get; set; } = new Dictionary<Employee, int>();
+
+    const int maxHrs = 8;
+    int maxVal = 0;
+    int minVal = 0;
+
+    public async Task AddToSchedule(Employee emp)
+    {
+        await parentService.AddEmployeeAsync(emp, thisDay, slot);
+        Priority.Remove(emp);
+        this.StateHasChanged();
+    }
+
+    public async Task RemoveFromSchedule(Employee emp)
+    {
+        await parentService.RemoveEmployeeAsync(emp, thisDay, slot);
+        this.StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        // Populate Priority Queue
+        foreach(Employee emp in PrioQueue)
+        {
+            int num = 0;
+            if (isInPrevSlot(emp)) num+= 2;
+            if (prefersDay(emp)) num++;
+            if (workedHrsDayAmt(emp) > maxHrs) num--;
+
+            Priority.Add(emp, num);
+        }
+    }
+
+    public bool isInPrevSlot(Employee emp)
+    {
+        List<Employee> employeesInPrevSlot = thisDay.GetEmployees(slot - 1);
+
+        bool returnVal = false;
+
+        foreach(Employee e in employeesInPrevSlot)
+        {
+            if (e == emp)
+                return true;
+
+        }
+        return false;
+
+    }
+
+    public bool prefersDay(Employee emp)
+    {
+        string prefs = emp.PreferredDays;
+        List<string> parsedPrefs = new List<string>();
+        if(prefs.Length > 0)
+        {
+            parsedPrefs = prefParse(prefs);
+        }
+
+        DayOfWeek weekday = thisDay.Date.DayOfWeek;
+
+        string compStr = Enum.GetName(typeof(DayOfWeek), weekday);
+
+        compStr = compStr.Substring(0, 3);
+
+        foreach(string s in parsedPrefs)
+        {
+            if (s == compStr)
+                return true;
+        }
+
+        return false;
+
+    }
+
+    public double workedHrsDayAmt(Employee emp)
+    {
+        double hourTotal = 0;
+
+
+        for(int i = 0; i < 48; i++)
+        {
+            foreach(Employee e in thisDay.GetEmployees(i))
+            {
+                if (emp == e) hourTotal += .5;
+            }
+        }
+       
+
+        return hourTotal;
+    }
+
+
+
+
+    private List<string> prefParse(string prefs)
+    {
+        List<string> returnVal = new List<string>();
+        int index = 0;
+
+        while(index < prefs.Length)
+        {
+            returnVal.Add(prefs.Substring(index, 3));
+
+            index = index + 3;
+        }
+
+        return returnVal;
+    }
 }
